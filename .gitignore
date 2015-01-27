@@ -2,3 +2,8 @@ config/db.config.inc.php
 config/application.config.inc.php
 logs/
 !README
+
+# Annoying files
+.DS_Store
+thumbs.db
+._*

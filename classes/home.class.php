@@ -29,7 +29,7 @@
 			$messages_injected_lasthour = $row["numberof"];
 			
 			// Get total number of messages in queue
-			$db->query("select count(*) as numberof from emails where is_sent = 0");
+			$db->query("select count(*) as numberof from emails where is_sent = 0 and is_cancelled = 0 and is_blocked = 0");
 			$row = $db->fetchrow();
 			$messages_in_queue = $row["numberof"];
 
