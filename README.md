@@ -1,6 +1,6 @@
 # Emailqueue #
 A fast, simple yet very efficient email queuing system for PHP/MySQL
-https://github.com/lorenzoherrera/emailqueue
+http://lorenzoherrera.github.io/emailqueue/
 Copyright (C) 2015 Lorenzo Herrera (hi@lorenzoherrera.com)
 
 
