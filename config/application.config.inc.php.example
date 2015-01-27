@@ -1,4 +1,7 @@
 <?
+	define("FRONTEND_USER", "user"); // The user name for the frontend
+	define("FRONTEND_PASSWORD", "password"); // The password for the frontend
+
 	define("QUEUED_MESSAGES", 40); // Number of last queued messages to show in frontend
 	define("LATEST_DELIVERED_MESSAGES", 10); // Number of last delivered messages to show in frontend
 	define("LATEST_CANCELLED_MESSAGES", 10); // Number of last cancelled messages to show in frontend

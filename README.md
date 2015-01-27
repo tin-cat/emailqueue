@@ -53,7 +53,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 
 * Create a database in your server with your desired name. e.g: emailqueue
 
-* Run the provided docs/emailqueue.sql on that database to create the initial database structure.ls
+* Run the provided docs/emailqueue.sql on that database to create the initial database structure.
 
 * Be sure the shell scripts scripts/delivery and scripts/purge are executable.
 

@@ -9,6 +9,13 @@
 	define("APP_DIR", "../");
 	
 	include APP_DIR."common.inc.php";
+
+	if(!($_SERVER['PHP_AUTH_USER'] == FRONTEND_USER && $_SERVER['PHP_AUTH_PW'] == FRONTEND_PASSWORD)) {
+		header("WWW-Authenticate: Basic realm=\"Emailqueue frontend\"");
+		header("HTTP/1.0 401 Unauthorized");
+		echo "Access restricted";
+		exit;
+	}
 	
 	$a = $utils->getglobal("a");
 	if(!$a || $a == "")
