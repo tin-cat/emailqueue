@@ -1,0 +1,8 @@
+<?
+
+	define("DB_HOST", "127.0.0.1");
+	define("DB_UID", "username");
+	define("DB_PWD", "password");
+	define("DB_DATABASE", "emailqueue");
+
+?>
