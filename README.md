@@ -12,7 +12,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 
 * The insertion is made as fast as possible, and your application is free to go. Emailqueue will take care of them.
 
-* Every minute, a cronjob calls the Emailqueue's delivery script, completely appart from your running application. Emailqueue checks the queue and sends the queued emails at its own pace. You can configure a delay between each email and the maximum number of emails sent each minute to even tune the delivery speed and be more friendly to external SMTPs.
+* Every minute, a cronjob calls the Emailqueue's delivery script, completely apart from your running application. Emailqueue checks the queue and sends the queued emails at its own pace. You can configure a delay between each email and the maximum number of emails sent each minute to even tune the delivery speed and be more friendly to external SMTPs.
 
 * Emailqueue even does some basic job at retrying emails that cannot be sent for whatever reason, and stores a history of detected incidences.
 
