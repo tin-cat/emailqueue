@@ -1,7 +1,7 @@
 # Emailqueue #
 A fast, simple yet very efficient email queuing system for PHP/MySQL
-http://lorenzoherrera.github.io/emailqueue/
-Copyright (C) 2015 Lorenzo Herrera (hi@lorenzoherrera.com)
+http://tin-cat.github.io/emailqueue/
+Copyright (C) 2015 Lorenzo Herrera (lorenzo@tin.cat)
 
 
 Almost anyone who has created a web application that sends emails to users in the form of newsletters, notifications, etc. has tried first to simply send the email from their code using the PHP email functions, or maybe even some advanced emailing library like the beautifully crafted PHPMailer (https://github.com/Synchro/PHPMailer). Sooner or later, though, they come to realize that triggering an SMTP connection from within their code is not the most efficient way to make a web application communicate via email with their users, mostly because this will make your code responsible about any SMTP connection errors and, specially, add all the SMTP delays to the user experience.
