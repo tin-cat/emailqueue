@@ -1,7 +1,7 @@
 <?
 
 	define(VERSION, "3.0.12");
-	define(OFFICIAL_PAGE_URL, "http://lorenzoherrera.github.io/emailqueue/");
+	define(OFFICIAL_PAGE_URL, "http://tin-cat.github.io/emailqueue");
 
 	include APP_DIR."config/db.config.inc.php";
 	include APP_DIR."config/application.config.inc.php";
