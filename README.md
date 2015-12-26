@@ -1,7 +1,9 @@
 # Emailqueue #
-A fast, simple yet very efficient email queuing system for PHP/MySQL
-http://tin-cat.github.io/emailqueue/
-Copyright (C) 2015 Lorenzo Herrera (lorenzo@tin.cat)
+**A fast, simple yet very efficient email queuing system for PHP/MySQL**
+
+https://github.com/tin-cat/emailqueue
+
+By Lorenzo Herrera (lorenzo@tin.cat)
 
 
 Almost anyone who has created a web application that sends emails to users in the form of newsletters, notifications, etc. has tried first to simply send the email from their code using the PHP email functions, or maybe even some advanced emailing library like the beautifully crafted PHPMailer (https://github.com/Synchro/PHPMailer). Sooner or later, though, they come to realize that triggering an SMTP connection from within their code is not the most efficient way to make a web application communicate via email with their users, mostly because this will make your code responsible about any SMTP connection errors and, specially, add all the SMTP delays to the user experience.
@@ -22,16 +24,13 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 ##Best features##
 
 * Inject any number of emails super-fast and inmediately free your app to do other things. Let Emailqueue do the job in the background.
-
 * Prioritize emails: Specify a priority when injecting an email and it will be sent before any other queued emails with lower priorities. E.g: You can inject 100k emails for a newsletter with priority 10 (they will take a while to be sent), and still inject an important email (like a password reminder message) with priority 1 to be sent ASAP even before the huge newsletter has been sent.
-
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
-
 * The code is quite naive, built about 15 years ago. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown man.
 
 ##Changelog##
 
-* Version 3.0.13
+* **Version 3.0.13**
   * Finally Emailqueue supports attachments! See the "Hints" section for a super-powerful idea with this.
   * Super-powerful functionality to auto-embed any images in an HTML image as attachments, so the messages appear super fast on the user's screen (no additional images to download by the client) and some email clients might show the images straightaway, not asking the user to optionally download them.
   * Much well documented.
@@ -69,23 +68,23 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Modify the scripts/delivery and scripts/purge files to match the installation directory of your Emailqueue
 
 * Setup two cronjobs in your linux to execute regularly the delivery and purge scripts, e.g:
-  	`$ crontab -e`
-  	* Add the following lines:
-  	`\* \* \* \* \* /var/www/htdocs/emailqueue/scripts/delivery
-  	0 6 \* \* \* /var/www/htdocs/emailqueue/scripts/purge`
+    
+    `$ crontab -e`
 
-  	* The delivery script delivers pending emails in the queue. Running it every minute is recommended.
+    Add the following lines:
+    `* * * * * /var/www/htdocs/emailqueue/scripts/delivery`
+    `0 6 * * * /var/www/htdocs/emailqueue/scripts/purge`
 
-  	* The purge script removes old & already sent emails from the queue to avoid the queue from growing too big. Running it every day is more than enough.
+    * The delivery script delivers pending emails in the queue. Running it every minute is recommended.
+
+    * The purge script removes old & already sent emails from the queue to avoid the queue from growing too big. Running it every day is more than enough.
 
 
 * You should be ready to go, now you can:
 
-	* See the status of the queue by accessing /emailqueue/frontend in your browser.
-
-	* You can now inject messages to the queue by updating the database by yourself (the "emails" table, field names are pretty self-explaining)
-
-	* You can optimally use the provided emailqueue_inject PHP class, found in scripts/emailqueue_inject.class.php. See an example on how to use this class in scripts/emailqueue_inject_test.php
+  * See the status of the queue by accessing /emailqueue/frontend in your browser.
+    * You can now inject messages to the queue by updating the database by yourself (the "emails" table, field names are pretty self-explaining)
+    * You can optimally use the provided emailqueue_inject PHP class, found in scripts/emailqueue_inject.class.php. See an example on how to use this class in scripts/emailqueue_inject_test.php
 
 * Take a look at the provided example.php
 
@@ -93,8 +92,8 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 
 If you have a version of emailqueue less than v3.0.13 (released on december 25th, 2015), and want to upgrade to v.3.0.13 or above, execute the following SQL in your emailqueue database in order to migrate:
 
-`ALTER TABLE emails ADD attachments TEXT NULL DEFAULT NULL;
-ALTER TABLE emails ADD is_embed_images TINYINT(1) NOT NULL DEFAULT 0;`
+`ALTER TABLE emails ADD attachments TEXT NULL DEFAULT NULL;`
+`ALTER TABLE emails ADD is_embed_images TINYINT(1) NOT NULL DEFAULT 0;`
 
 No other changes are needed for the migration.
 
@@ -103,32 +102,31 @@ No other changes are needed for the migration.
 The file example.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class, which is the recommended method. Here's what to do, anyway:
 
 * Include the following files (specify your path as needed):
-  * config/application.config.inc.php
-  * config/db.config.inc.php
-  * scripts/emailqueue_inject.class.php
-
+    * config/application.config.inc.php
+    * config/db.config.inc.php
+    * scripts/emailqueue_inject.class.php
 * Instantiate an emailqueue_inject object passing the database connection configuration, which can be taken from the very same configuration stored in db.config.inc.php by just specifying the defines as follows:
   `$emailqueue_inject = new emailqueue_inject(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);`
 
 * Send an email by calling the inject method of the emailqueue_inject object. Here's an explanation of all the parameters:
 
-  * foreign_id_a: Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.
-  * foreign_id_b: Optional, a secondary id number for your internal records.
-  * priority: The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before.
-  * is_inmediate: Set it to true to send this email as soon as possible. (doesn't overrides priority setting)
-  * date_queued: If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting)
-  * is_html: Whether the given "content" parameter contains HTML or not.
-  * from: The sender email address
-  * from_name: The sender name
-  * to: The addressee email address
-  * replyto: The email address where replies to this message will be sent by default
-  * replyto_name: The name where replies to this message will be sent by default
-  * subject: The email subject
-  * content: The email content. Can contain HTML (set is_html parameter to true if so).
-  * content_nonhtml: The plain text-only content for clients not supporting HTML emails (quite rare nowadays). If set to false, a text-only version of the given content will be automatically generated.
-  * list_unsubscribe_url: Optional. Specify the URL where users can unsubscribe from your mailing list. Some email clients will show this URL as an option to the user, and it's likely to be considered by many SPAM filters as a good signal, so it's really recommended.
-  * attachments: Optional. An array of hash arrays specifying the files you want to attach to your email. See example.php for an specific description on how to build this array.
-  * is_embed_images: When set to true, Emailqueue will find all the <img ... /> tags in your provided HTML code on the "content" parameter and convert them into embedded images that are attached to the email itself instead of being referenced by URL. This might cause email clients to show the email straightaway without the user having to accept manually to load the images. Setting this option to true will greatly increase the bandwith usage of your SMTP server, since each message will contain hard copies of all embedded messages. 10k emails with 300Kbs worth of images each means around 3Gb. of data to be transferred!
+  * **foreign_id_a**: Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.
+  * **foreign_id_b**: Optional, a secondary id number for your internal records.
+  * **priority**: The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before.
+  * **is_inmediate**: Set it to true to send this email as soon as possible. (doesn't overrides priority setting)
+  * **date_queued: If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting)
+  * **is_html**: Whether the given "content" parameter contains HTML or not.
+  * **from**: The sender email address
+  * **from_name**: The sender name
+  * **to**: The addressee email address
+  * **replyto**: The email address where replies to this message will be sent by default
+  * **replyto_name**: The name where replies to this message will be sent by default
+  * **subject**: The email subject
+  * **content**: The email content. Can contain HTML (set is_html parameter to true if so).
+  * **content_nonhtml**: The plain text-only content for clients not supporting HTML emails (quite rare nowadays). If set to false, a text-only version of the given content will be automatically generated.
+  * **list_unsubscribe_url**: Optional. Specify the URL where users can unsubscribe from your mailing list. Some email clients will show this URL as an option to the user, and it's likely to be considered by many SPAM filters as a good signal, so it's really recommended.
+  * **attachments**: Optional. An array of hash arrays specifying the files you want to attach to your email. See example.php for an specific description on how to build this array.
+  * **is_embed_images**: When set to true, Emailqueue will find all the <img ... /> tags in your provided HTML code on the "content" parameter and convert them into embedded images that are attached to the email itself instead of being referenced by URL. This might cause email clients to show the email straightaway without the user having to accept manually to load the images. Setting this option to true will greatly increase the bandwith usage of your SMTP server, since each message will contain hard copies of all embedded messages. 10k emails with 300Kbs worth of images each means around 3Gb. of data to be transferred!
 
 ##Hints##
 
