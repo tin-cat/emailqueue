@@ -33,9 +33,11 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * **Version 3.0.13**
   * Finally Emailqueue supports attachments! See the "Hints" section for a super-powerful idea with this.
   * Super-powerful functionality to auto-embed any images in an HTML image as attachments, so the messages appear super fast on the user's screen (no additional images to download by the client) and some email clients might show the images straightaway, not asking the user to optionally download them.
-  * Much well documented.
-  * Come code cleanup. Still very naive code, tough.
-  * Added advice about animal abuse.
+  * Much better documentation.
+  * Some code cleanup. Still very naive code, tough.
+  * Some visual improvements to the frontend, also including a new futuristic logo in all PNG glory, and a beautiful tiny favicon.
+  * PHPMailer library is now a GIT submodule.
+  * Added animal abuse manifesto.
 
 ##Caveats##
 
@@ -106,6 +108,7 @@ The file example.php is a thoroughly documented example on how to send an email 
     * config/db.config.inc.php
     * scripts/emailqueue_inject.class.php
 * Instantiate an emailqueue_inject object passing the database connection configuration, which can be taken from the very same configuration stored in db.config.inc.php by just specifying the defines as follows:
+  
   `$emailqueue_inject = new emailqueue_inject(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);`
 
 * Send an email by calling the inject method of the emailqueue_inject object. Here's an explanation of all the parameters:
