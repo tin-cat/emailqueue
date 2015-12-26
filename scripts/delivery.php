@@ -11,6 +11,8 @@
 	include APP_DIR."common.inc.php";
 	
 	include APP_DIR."lib/phpmailer/class.phpmailer.php";
+	if (SEND_METHOD == "smtp")
+		include APP_DIR."lib/phpmailer/class.smtp.php";
 	
 	header("content-type: text/plain");
 	set_time_limit(0);
@@ -133,17 +135,19 @@
 
                 $mail->CharSet = "UTF-8";
 
-                $mail->IsSMTP();
+                if (SEND_METHOD == "smtp") {
+	                $mail->IsSMTP();
+	                $mail->Host = SMTP_SERVER;
 
-                if (SMTP_IS_AUTHENTICATION) {
-                    $mail->SMTPAuth = true;
-                    $mail->Port = 25;
-                    $mail->Host = SMTP_SERVER;
-                    $mail->Username = SMTP_AUTHENTICATION_USERNAME;
-                    $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
-                }
-
-                $mail->IsSendmail();
+	                if (SMTP_IS_AUTHENTICATION) {
+	                    $mail->SMTPAuth = true;
+	                    $mail->Port = 25;
+	                    $mail->Username = SMTP_AUTHENTICATION_USERNAME;
+	                    $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
+	                }
+	            }
+	            else if (SEND_METHOD == "sendmail")
+	            	$mail->IsSendmail();
 
                 if ($email["replyto"] != "") {
                     if($email["replyto_name"] != "")

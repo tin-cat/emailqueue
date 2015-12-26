@@ -11,8 +11,8 @@
 	define("SENDING_RETRY_MAX_ATTEMPTS", 3); // Maximum number of attemps to send a message
 	define("PURGE_OLDER_THAN_DAYS", 30); // Purge messages older than this days from the database
 	
+	define("SEND_METHOD", "smtp"); // Set it to either "smtp" or "sendmail" to choose the method for delivering emails. If "smtp" is choosen, at least the SMTP_SERVER below must be set.
 	define("SMTP_SERVER", "127.0.0.1"); // The IP of the SMTP server
-	
 	define("SMTP_IS_AUTHENTICATION", false); // True to use SMTP server Authentication
 	define("SMTP_AUTHENTICATION_USERNAME", "");
 	define("SMTP_AUTHENTICATION_PASSWORD", "");
@@ -20,8 +20,6 @@
 	define("PHPMAILER_LANGUAGE", "en");
 	
 	define("DEFAULT_TIMEZONE", "UTC");
-
-	$attachFilesWhenFrom = false;
 
 	define("LOGS_DIR", "logs"); // The directory to store logs
 	define("LOGS_FILENAME_DATEFORMAT", "Y-m-d"); // The file name format for log files, as a parameter for the PHP date() function

@@ -22,7 +22,7 @@ EMailqeue - PHP Inject class test
         true, // is_html
         "from@email.com", // from
         "From name", // from_name
-        "to@email.com", // to
+        "lorenzo@litmind.com", // to
         "replyto@email.com", // replyto
         "Reply to name", // replyto_name
         "Test subject", // subject
