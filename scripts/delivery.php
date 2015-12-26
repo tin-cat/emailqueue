@@ -114,19 +114,20 @@
 			}
 			
 			// Check black list
-            if (is_array($blacklisted_emails) and in_array(strtolower(trim($email["to"])), $blacklisted_emails)) {
-				echo "recipient is on the black list.";
-				add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
-				cancel($email["id"]);
-				$logger->add_log_incidence(
-					array(
-						$email["id"],
-						$email["to"],
-						"Email cancelled",
-						"Recipient is on the black list"
-					)
-				);
-			}
+			if (isset($blacklisted_emails))
+	            if (is_array($blacklisted_emails) and in_array(strtolower(trim($email["to"])), $blacklisted_emails)) {
+					echo "recipient is on the black list.";
+					add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
+					cancel($email["id"]);
+					$logger->add_log_incidence(
+						array(
+							$email["id"],
+							$email["to"],
+							"Email cancelled",
+							"Recipient is on the black list"
+						)
+					);
+				}
 
             if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && in_array($email["to"], $devel_emails))) {
 
