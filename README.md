@@ -31,8 +31,8 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 ##Changelog##
 
 * **Version 3.0.13**
-  * Finally Emailqueue supports attachments! See the "Hints" section for a super-powerful idea with this.
-  * Super-powerful functionality to auto-embed any images in an HTML image as attachments, so the messages appear super fast on the user's screen (no additional images to download by the client) and some email clients might show the images straightaway, not asking the user to optionally download them.
+  * Finally Emailqueue supports attachments! See the "Hints" section for an interesting idea with this.
+  * Super-powerful functionality to auto-embed all images in your messages as attachments, so they should appear really fast on the user's screen once received (no additional images to download by the client). Also, some email clients might show the images straightaway without asking the user to download them.
   * Much better documentation.
   * Some code cleanup. Still very naive code, tough.
   * Some visual improvements to the frontend, also including a new futuristic logo in all PNG glory, and a beautiful tiny favicon.
@@ -52,14 +52,13 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 ##How to install##
 
 * Clone the emailqueue repository wherever you want it.
-    * It's not strictly mandatory to install emailqueue under a web public directory, but will make installation easier. Proper .htaccess files are already placed properly to avoid sensible directories from being served by your web server to the public.
-    * Don't forget to copy hidden .htaccess files
+    * It's not strictly mandatory to install emailqueue under a web public directory, but will make installation easier. ".htaccess" files are already properly placed to avoid sensible directories from being served publicly.
 
-* Emailqueue depends on the great PHPMailer, and it's builtin as a GIT submodule. To clone it properly, add the --recursive commandline parameter when doing your "git clone", like so:
+* Emailqueue depends on the great PHPMailer, and it's builtin as a GIT submodule. To clone it properly, add the `--recursive` commandline parameter when doing your git clone, like so:
 
-    git clone https://github.com/tin-cat/emailqueue.git --recursive
+    `git clone https://github.com/tin-cat/emailqueue.git --recursive`
 
-    Or you can simply clone normally, and then execute the "git submodule init" and then "git submodule update" commands to download dependant libraries.
+    Or you can simply clone normally, and then execute the `git submodule init` and then `git submodule update`commands to download dependant libraries.
 
 * Create a database in your server with your desired name. e.g: emailqueue
 

@@ -32,6 +32,7 @@ CREATE TABLE `emails` (
   `content_nonhtml` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `list_unsubscribe_url` varchar(255) DEFAULT NULL,
   `attachments` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `is_embed_images` tinyint(1) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `listings` (`is_sent`,`is_cancelled`,`date_injected`,`date_sent`)
