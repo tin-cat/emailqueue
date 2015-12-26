@@ -109,6 +109,7 @@ iframe.message_preview {
 	border: solid #fff 2px;
 	margin: 40px;
 	width: calc(100% - 80px);
+	height: 1000px;
 }
 
 .tableMessages {
