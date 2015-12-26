@@ -10,7 +10,7 @@
 	
 	include APP_DIR."common.inc.php";
 
-	if(!($_SERVER['PHP_AUTH_USER'] == FRONTEND_USER && $_SERVER['PHP_AUTH_PW'] == FRONTEND_PASSWORD)) {
+	if (!($_SERVER['PHP_AUTH_USER'] == FRONTEND_USER && $_SERVER['PHP_AUTH_PW'] == FRONTEND_PASSWORD)) {
 		header("WWW-Authenticate: Basic realm=\"Emailqueue frontend\"");
 		header("HTTP/1.0 401 Unauthorized");
 		echo "Access restricted";
@@ -18,11 +18,10 @@
 	}
 	
 	$a = $utils->getglobal("a");
-	if(!$a || $a == "")
+	if (!$a || $a == "")
 		$a = "home";
 	
-	switch($a)
-	{
+	switch ($a) {
 		case "home":
 			include APP_DIR."classes/home.class.php";
 			$home = new home();
@@ -43,11 +42,7 @@
 	}
 	
 	// Control cases wich don't need head nor footer
-	if
-	(
-	   $utils->getglobal("aa") != "view_iframe_body"
-	)
-	{
+	if ($utils->getglobal("aa") != "view_iframe_body") {
 	   $out->add_tobeggining($html->head());
 	   $out->add($html->foot());
 	}

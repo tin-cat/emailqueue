@@ -1,12 +1,10 @@
 <?
 
-	class logger
-	{
+	class logger {
 		var $filename_delivery;
 		var $filename_incidences;
 		
-		function logger()
-		{
+		function logger() {
 			$this->filename_delivery = APP_DIR.LOGS_DIR."/".$this->get_log_filename("delivery");
 			$this->filename_incidences = APP_DIR.LOGS_DIR."/".$this->get_log_filename("incidences");
 			
@@ -49,8 +47,7 @@
 			*/
 		}
 	  
-		function add_log_delivery($data)
-		{
+		function add_log_delivery($data) {
 			/*
 			$content = $this->get_logline($data);
 			$handle = fopen($this->filename_delivery, "a");
@@ -63,8 +60,7 @@
 			*/
 		}
 	
-		function add_log_incidence($data)
-		{
+		function add_log_incidence($data) {
 			/*
 			$content = $this->get_logline($data);
 			$handle = fopen($this->filename_incidences, "a");
@@ -77,8 +73,7 @@
 			*/
 		}
 	
-		function get_logline($data)
-		{
+		function get_logline($data) {
 		  	$retr .= date(LOGS_DATA_DATEFORMAT)."|";
 		  	for($i=0; $i<sizeof($data); $i++)
 		  		$data[$i] = str_replace("|", " ", $data[$i]);
@@ -87,8 +82,7 @@
 			return $retr;
 		}
 	
-		function get_log_filename($preffix)
-		{
+		function get_log_filename($preffix) {
 			global $now;
 			return $preffix."_".date(LOGS_FILENAME_DATEFORMAT, $now).".log";
 		}

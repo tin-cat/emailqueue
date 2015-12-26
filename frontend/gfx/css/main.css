@@ -32,22 +32,25 @@ hr {
 
 #head {
 	background: #333;
-	padding: 20px 25px;
+	padding: 20px;
 	color: #fff;
 }
 
-#head > .logo {
-	font-family: "Trebuchet MS", Arial;
-	font-size: 38pt;
-	font-weight: bold;
-	letter-spacing: -2px;
-	text-decoration: none;
-	color: #eee;
+#head > img.logo {
+	float: left;
+	height: 40pt;
+	margin-right: 10px;
+}
+
+#head > .title {
+	height: 40pt;
+	line-height: 1.3em;
+	vertical-align: baseline;
 }
 
 .block {
 	overflow: hidden;
-	padding: 20px;
+	padding: 40px;
 	border-bottom: dotted rgba(255, 255, 255, 0.1) 1px;
 }
 
@@ -59,6 +62,7 @@ hr {
 }
 
 .pairs {
+	width: 50%;
 	float: left;
 }
 
@@ -70,7 +74,7 @@ hr {
 
 .pairs > .pair > .key {
 	display: inline-block;
-	width: 180px;
+	margin-right: 1em;
 	color: rgba(255, 255, 255, 0.4);
 	vertical-align: top;
 	white-space: pre-wrap;
@@ -101,8 +105,10 @@ hr {
 	color: #fff;
 }
 
-iframe {
+iframe.message_preview {
 	border: solid #fff 2px;
+	margin: 40px;
+	width: calc(100% - 80px);
 }
 
 .tableMessages {

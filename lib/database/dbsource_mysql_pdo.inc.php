@@ -55,6 +55,7 @@
 
 		function disconnect ()
 		{
+			echo "!"; die;
 			$this->pdo = null;
 		}
 

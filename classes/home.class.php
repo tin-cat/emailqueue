@@ -1,9 +1,7 @@
 <?
 
-	class home
-	{
-		function getinfo()
-		{
+	class home {
+		function getinfo() {
 		  	global $db;
 			global $messages;
 			
@@ -35,8 +33,7 @@
 
             global $devel_emails;
 			
-			$retr .=
-			"
+			$retr .= "
                 <div class=block>
                     <div class=block_title>Status</div>
 		  			<div class=pairs>
@@ -49,7 +46,7 @@
                         <div class=pair><div class=key>SMTP server</div><div class=value>".(SMTP_SERVER == "127.0.0.1" || SMTP_SERVER == "localhost" ? "Same server" : SMTP_SERVER)."</div></div>
                         <div class=pair><div class=key>Purge messages older than</div><div class=value>".PURGE_OLDER_THAN_DAYS." days</div></div>
                     </div>
-                    <div class=pairs style=\"margin-left: 20px;\">
+                    <div class=pairs>
                         <div class=pair><div class=key>Messages sent</div><div class=value>".number_format($messages_sent, 0, ".", ",")."</div></div>
                         <div class=pair><div class=key>Messages cancelled</div><div class=value>".number_format($messages_cancelled, 0, ".", ",")."</div></div>
                         <div class=pair><div class=key>Messages injected today</div><div class=value>".number_format($messages_injected_today, 0, ".", ",")."</div></div>
@@ -60,14 +57,12 @@
 			";
 		  
 		  	// Waiting messages list
-		  	$retr .=
-		  	"
+		  	$retr .= "
 				<div class=block>
 		  			<div class=block_title>First ".QUEUED_MESSAGES." messages waiting to be delivered</div>
 		  	";
 		  	
-		  	$db->query
-		  	("
+		  	$db->query("
 		  		select			*
 		  		from			emails
 		  		where			is_sent = 0
@@ -79,21 +74,18 @@
 		  	if(!$list)
 		  		$list = "No messages waiting";
 		  	
-		  	$retr .=
-		  	"
+		  	$retr .= "
 		  			".$list."
 		  		</div>
 		  	";
 		  	
 		  	// Latest delivered messages
-		  	$retr .=
-		  	"
+		  	$retr .= "
 				<div class=block>
 		  			<div class=block_title>Last ".LATEST_DELIVERED_MESSAGES." delivered messages</div>
 		  	";
 		  	
-		  	$db->query
-		  	("
+		  	$db->query("
 		  		select			*
 		  		from			emails
 		  		where			is_sent
@@ -111,14 +103,12 @@
 		  	";
 		  	
 		  	// Cancelled
-		  	$retr .=
-		  	"
+		  	$retr .= "
 				<div class=block>
 		  			<div class=block_title>Last ".LATEST_CANCELLED_MESSAGES." cancelled messages</div>
 		  	";
 		  	
-		  	$db->query
-		  	("
+		  	$db->query("
 		  		select			*
 		  		from			emails
 		  		where			is_cancelled = 1
@@ -129,16 +119,13 @@
 		  	if(!$list)
 		  		$list = "None";
 		  	
-		  	$retr .=
-		  	"
+		  	$retr .="
 		  			".$list."
 		  		</div>
 		  	";
 		  	
 			return $retr;
 		}
-		
-
 	}
 
 ?>

@@ -21,6 +21,8 @@
 	
 	define("DEFAULT_TIMEZONE", "UTC");
 
+	$attachFilesWhenFrom = false;
+
 	define("LOGS_DIR", "logs"); // The directory to store logs
 	define("LOGS_FILENAME_DATEFORMAT", "Y-m-d"); // The file name format for log files, as a parameter for the PHP date() function
 	define("LOGS_DATA_DATEFORMAT", "Y-m-d H:i:s"); // The format of the date as stored inside log files, as a parameter for the PHP date() function

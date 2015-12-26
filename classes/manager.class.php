@@ -1,15 +1,12 @@
 <?
 
-	class manager
-	{
-		function run()
-		{
+	class manager {
+		function run() {
             global $utils;
             
             $aa = $utils->getglobal("aa");
             
-            switch($aa)
-            {
+            switch($aa) {
                 case "view":
                     $retr .= $this->view();
                     break;
@@ -38,8 +35,7 @@
             return $retr;
 		}
         
-        function view()
-        {
+        function view() {
             global $db;
             global $utils;
             
@@ -47,18 +43,27 @@
             
             $result = $db->query("select * from emails where id = ".$email_id);
 			
-			if(!$result || !$db->isanyresult())
+			if (!$result || !$db->isanyresult())
 				return "Error: Message ".$email_id." does not exists.";
 			
             $message = $db->fetchrow();
+
+            // Build attachments info
+            if (!$message["attachments"])
+                $attachmentsInfo = "No attachments";
+            else {
+                $attachments = unserialize($message["attachments"]);
+                foreach ($attachments as $attachment)
+                    $attachmentsInfo .= $attachment["path"]."<br>";
+            }
             
             $retr .=
             "
 				<div class=block><a href=\"javascript:history.go(-1);\" class=button>&laquo; back</a></div>
-				<div class=block style=\"white-space: nowrap;\">
+				<div class=block>
 					<div class=block_title>Message #".$email_id."</div>					
 		  			
-                        <div class=pairs style=\"width: 30%; display: inline-block; margin-right: 2%;\">
+                        <div class=pairs>
                             <div class=pair>
                                 <div class=key>Foreign id A</div>
                                 <div class=value>".(!$message["foreign_id_a"] ? "none" : $message["foreign_id_a"])."</div>
@@ -95,6 +100,8 @@
                                 <div class=key>No. of times sent</div>
                                 <div class=value>".($message["send_count"] ? $message["send_count"]." times" : "not sent")."</div>
                             </div>
+                        </div>
+                        <div class=pairs>
                             <div class=pair>
                                 <div class=key>Injected on</div>
                                 <div class=value>".$utils->date_specialformat(strtotime($message["date_injected"]))."</div>
@@ -151,18 +158,24 @@
                                 <div class=key>Subject</div>
                                 <div class=value>".$message["subject"]."</div>
                             </div>
+                            <div class=pair>
+                                <div class=key>Attachments</div>
+                                <div class=value>".$attachmentsInfo."</div>
+                            </div>
+                            <div class=pair>
+                                <div class=key>Embed images</div>
+                                <div class=value>".($message["is_embed_images"] ? "Yes" : "No")."</div>
+                            </div>
 
                         </div>
-
-						<iframe width=68% height=800 src=\"?a=manager&aa=view_iframe_body&email_id=".$message["id"]."\" style=\"display: inline-block;\"></iframe>
                 </div>
+                <iframe class=\"message_preview\" src=\"?a=manager&aa=view_iframe_body&email_id=".$message["id"]."\"></iframe>
             ";
             
             return $retr;
         }
         
-        function view_iframe_body()
-        {
+        function view_iframe_body() {
             global $db;
             global $utils;
             
@@ -174,8 +187,7 @@
             return $message["content"];	
         }
 		
-		function block()
-        {
+		function block() {
             global $db;
             global $utils;
             
@@ -183,7 +195,7 @@
             
             $result = $db->query("select * from emails where id = ".$email_id);
 			
-			if(!$result || !$db->isanyresult())
+			if (!$result || !$db->isanyresult())
 				return "Error: Message ".$email_id." does not exists.";
 			
             $message = $db->fetchrow();
@@ -193,8 +205,7 @@
 			$utils->redirect_javascript("?a=home");
 		}
 		
-		function unblock()
-        {
+		function unblock() {
             global $db;
             global $utils;
             
@@ -202,7 +213,7 @@
             
             $result = $db->query("select * from emails where id = ".$email_id);
 			
-			if(!$result || !$db->isanyresult())
+			if (!$result || !$db->isanyresult())
 				return "Error: Message ".$email_id." does not exists.";
 			
             $message = $db->fetchrow();
@@ -212,8 +223,7 @@
 			$utils->redirect_javascript("?a=home");
 		}
 		
-		function cancel()
-        {
+		function cancel() {
             global $db;
             global $utils;
             
@@ -221,7 +231,7 @@
             
             $result = $db->query("select * from emails where id = ".$email_id);
 			
-			if(!$result || !$db->isanyresult())
+			if (!$result || !$db->isanyresult())
 				return "Error: Message ".$email_id." does not exists.";
 			
             $message = $db->fetchrow();
@@ -231,8 +241,7 @@
 			$utils->redirect_javascript("?a=home");
 		}
 		
-		function requeue()
-        {
+		function requeue() {
             global $db;
             global $utils;
             
@@ -240,7 +249,7 @@
             
             $result = $db->query("select * from emails where id = ".$email_id);
 			
-			if(!$result || !$db->isanyresult())
+			if (!$result || !$db->isanyresult())
 				return "Error: Message ".$email_id." does not exists.";
 			
             $message = $db->fetchrow();

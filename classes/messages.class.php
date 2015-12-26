@@ -1,15 +1,13 @@
 <?
 
-	class messages
-	{
-		function get_list()
-		{
+	class messages {
+		function get_list() {
 		  	global $db;
 		  	global $utils;
 		  	global $html;
 		  	global $now;
 		  	
-		  	if(!$db->isanyresult())
+		  	if (!$db->isanyresult())
 		  		return false;
 		  	
 		  	$retr .=
@@ -27,11 +25,10 @@
 		  		</tr>
 		  	";
 		  	
-		  	while($row = $db->fetchrow())
+		  	while ($row = $db->fetchrow())
 		  		$rows[] = $row;
 		  	
-            foreach($rows as $row)
-		  	{
+            foreach ($rows as $row) {
 		  	  	$retr .=
 		  	  	"
 		  	  		<tr>
@@ -193,17 +190,15 @@
 		  	  		</tr>
 		  	  	";
 		  	  	
-		  	  	$db->query
-		  	  	("
+		  	  	$db->query("
 		  	  		select			*
 		  	  		from			incidences
 		  	  		where			email_id = ".$row["id"]."
 		  	  		order by		date_incidence asc
 		  	  	");
-		  	  	if($db->isanyresult())
-		  	  	{
-		  	  		while($incidence = $db->fetchrow())
-		  	  		{
+
+		  	  	if ($db->isanyresult()) {
+		  	  		while ($incidence = $db->fetchrow()) {
 			  	  		$retr .=
 			  	  		"
 			  	  			<tr>

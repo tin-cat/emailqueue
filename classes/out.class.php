@@ -1,26 +1,21 @@
 <?
 
-	class out
-	{
+	class out {
 		var $data;
 
-		function add($data)
-		{
+		function add($data) {
 			$this->data .= $data;
 		}
 
-		function add_tobeggining($data)
-		{
+		function add_tobeggining($data) {
 			$this->data = $data.$this->data;
 		}
 
-		function clear()
-		{
+		function clear() {
 			$this->data = "";
 		}
 
-		function dump()
-		{
+		function dump() {
 			echo $this->data;
 		}
 

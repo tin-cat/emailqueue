@@ -1,7 +1,6 @@
 <?
 	
-	class emailqueue_inject
-	{
+	class emailqueue_inject {
         var $db_host;
         var $db_user;
         var $db_password;
@@ -10,8 +9,7 @@
         var $avoidpersistence;
         var $default_priority = 10;
         
-        function emailqueue_inject($db_host, $db_user, $db_password, $db_name, $avoidpersistence = false, $emailqueue_timezone = false)
-        {            
+        function emailqueue_inject($db_host, $db_user, $db_password, $db_name, $avoidpersistence = false, $emailqueue_timezone = false) {
             $this->db_host = $db_host;
             $this->db_user = $db_user;
             $this->db_password = $db_password;
@@ -23,10 +21,8 @@
                 $this->emailqueue_timezone = $emailqueue_timezone;
         }
         
-        function db_connect()
-        {
-            if(!$this->connectionid = mysqli_connect($this->db_host, $this->db_user, $this->db_password))
-            {
+        function db_connect() {
+            if(!$this->connectionid = mysqli_connect($this->db_host, $this->db_user, $this->db_password)) {
                 echo "Emailqueue Inject class component: Cannot connect to database";
                 die;
             }
@@ -34,13 +30,11 @@
 			mysqli_query($this->connectionid, "set names utf8");
         }
         
-        function db_disconnect()
-        {
+        function db_disconnect() {
             mysqli_close($this->connectionid);
         }
         
-        function inject
-        (
+        function inject(
             $foreign_id_a = null,
             $foreign_id_b = null,
             $priority = 10,
@@ -55,14 +49,16 @@
             $subject,
             $content,
             $content_nonhtml = "",
-            $list_unsubscribe_url = ""
-        )
-        {
+            $list_unsubscribe_url = "",
+            $attachments = false,
+            $is_embed_images = false
+        ) {
             $this->db_connect();
         
             $subject = str_replace("\\'", "'", $subject);
             $subject = str_replace("'", "\'", $subject);
 
+            // Some recommendations have been found about not sending emails longer than 63k bytes, it seems that triggers lots of spam-detection alarms.
             if(strlen($content) > 63000)
                 $content = substr($content, 0, 63000);
             
@@ -71,6 +67,19 @@
             
             $content_nonhtml = str_replace("\\'", "'", $content_nonhtml);
             $content_nonhtml = str_replace("'", "\'", $content_nonhtml);
+
+            // Prepare attachments array
+            if ($attachments) {
+                if (!is_array($attachments)) {
+                    echo "Emailqueue inject error: attachments parameter must be an array.";
+                    return false;
+                }
+                foreach ($attachments as $attachment)
+                    if (!is_array($attachment)) {
+                        echo "Emailqueue inject error: Each attachment specified on the attachments array must be a hash array.";
+                        return false;
+                    }
+            }
             
             $result = mysqli_query
             (
@@ -78,8 +87,8 @@
 				"
 					insert into emails
 					(
-						foreign_id_a,
-						foreign_id_b,
+                        foreign_id_a,
+                        foreign_id_b,
 						priority,
 						is_inmediate,
 						is_sent,
@@ -100,7 +109,9 @@
 						subject,
 						content,
 						content_nonhtml,
-						list_unsubscribe_url
+						list_unsubscribe_url,
+                        attachments,
+                        is_embed_images
 					)
 					values
 					(
@@ -126,23 +137,18 @@
 						'".$subject."',
 						'".$content."',
 						'".$content_nonhtml."',
-						'".$list_unsubscribe_url."'
+						'".$list_unsubscribe_url."',
+                        ".($attachments ? "'".serialize($attachments)."'" : "null").",
+                        ".($is_embed_images ? "1" : "0")."
 					)
 				"
 			);
-            
             $this->db_disconnect();
             
-            if($result)
-                return true;
-            else {
-                mail("lorenzo@litmind.com", "Error Emailqueue", "Error while injecting");
-                return false;
-            }
+            return $result ? true : false;
         }
 
-        function timestamp_adjust($timestamp, $to_timezone)
-        {
+        function timestamp_adjust($timestamp, $to_timezone) {
             $datetime_object = new DateTime("@".$timestamp);
 
             $from_timezone_object = new DateTimeZone(date_default_timezone_get());
@@ -152,9 +158,9 @@
 
             return $timestamp+$offset;
         }
-        
-        function destroy()
-        {
+
+        function destroy() {
+            // Method deprecated, left for compatibility purposes. Will likely be removed on future versions.
         }
 	}
 	
