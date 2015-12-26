@@ -223,69 +223,60 @@
                     }
                 }
 
-                $email_send_result = $mail->Send();
-
-                if (!$email_send_result) {
-                	echo "PHPMailer error: ".$mail->ErrorInfo;
-                	$email_send_result = false;
-                }
-
-            } else {
-                echo "Running in devel environment, the recipient email isn't on the allowed devel emails. ";
-                $email_send_result = true;
-            }
-				
-			if (!$email_send_result) {
-				echo "Error while sending email: ".$mail->ErrorInfo.", ";
-				
-				if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
-					update_error_count($email["id"], $email["error_count"]+1);
-					$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Cancelled: No more sending attempts allowed";
-					add_incidence($email["id"], $incidence_text);
-					cancel($email["id"]);
-					$logger->add_log_incidence(
-						array(
-							$email["id"],
-							$email["to"],
-							"Email cancelled",
-							"No more sending attempts allowed"
-						)
-					);
-					echo "No more attempts allowed, cancelled";
-				}
-				else {
-					update_error_count($email["id"], $email["error_count"]+1);
-					$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Scheduled for one more try";
-					add_incidence($email["id"], $incidence_text);
-					$logger->add_log_incidence(
-						array(
-							$email["id"],
-							$email["to"],
-							"Email rescheduled",
-							$incidence_text
-						)
-					);
-					echo "Scheduled for one more try";
-				}
-			}
-			else {
-			  	mark_as_sent($email["id"]);
-				update_send_count($email["id"], $email["send_count"]+1);
-				update_sentdate($email["id"], $now);
-				$logger->add_log_delivery(
-					array(
+                if ($mail->Send()) {
+					
+					mark_as_sent($email["id"]);
+					update_send_count($email["id"], $email["send_count"]+1);
+					update_sentdate($email["id"], $now);
+					$logger->add_log_delivery(array(
 						$email["id"],
 						"Email delivered",
 						$email["from"],
 						$email["to"],
 						$email["subject"]
-					)
-				);
-				echo "Email processed";
-				
-				// Sleeping
-				usleep((DELIVERY_INTERVAL/100));
-			}
+					));
+					echo "Email processed";
+					
+					// Sleeping
+					usleep((DELIVERY_INTERVAL/100));
+
+				}
+				else {
+
+					echo "Error while sending email: ".$mail->ErrorInfo.", ";
+					
+					if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Cancelled: No more sending attempts allowed";
+						add_incidence($email["id"], $incidence_text);
+						cancel($email["id"]);
+						$logger->add_log_incidence(
+							array(
+								$email["id"],
+								$email["to"],
+								"Email cancelled",
+								"No more sending attempts allowed"
+							)
+						);
+						echo "No more attempts allowed, cancelled";
+					}
+					else {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Scheduled for one more try";
+						add_incidence($email["id"], $incidence_text);
+						$logger->add_log_incidence(array(
+							$email["id"],
+							$email["to"],
+							"Email rescheduled",
+							$incidence_text
+						));
+						echo "Scheduled for one more try";
+					}
+
+				}
+
+            } else
+                echo "Running in devel environment, the recipient email isn't on the allowed devel emails. ";
 			
 			echo "\n";
 			

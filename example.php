@@ -42,7 +42,7 @@ EMailqeue - PHP Inject class test
                 "path" => __DIR__."/frontend/gfx/img/item.gif"
             )
         ),
-        true // is_embed_images: Whether to convert any images found on the given HMTL to attachments, so the email is completely self-contained, containing all the images it needs to be rendered correctly. Might cause some email clients to always show the images on a message instead of giving the user the option to download them. Beware: Activating this option will make your emails a lot bigger, increasing the bandwidth usage dramatically.
+        true // is_embed_images: Whether to convert any images found on the given HMTL to attachments, so the email is completely self-contained, containing all the images it needs to be rendered correctly. Might cause some email clients to always show the images on a message instead of giving the user the option to download them. Beware: Activating this option will make your emails a lot bigger, increasing the bandwidth usage dramatically. It's been found that embedding images this way ranks high in at least some SPAM detection engines, maybe because the increased email footprint. Make your research and perform tests.
     );
     
     if($result)
