@@ -11,8 +11,8 @@
 	$now = mktime();
 	
 	include LIB_DIR."/database/database.inc.php";
-	include LIB_DIR."/database/dbsource_mysql.inc.php";
-	$db = new dbsource_mysql(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);
+	include LIB_DIR."/database/dbsource_mysqli.inc.php";
+	$db = new dbsource_mysqli(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);
 	if (!$db->connect()) {
 		echo "Cannot connect to database";
 		die;
