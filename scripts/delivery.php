@@ -65,6 +65,8 @@
 		$timecontrol_start = mktime();
 		
 		foreach ($emails as $email) {
+			flush();
+			ob_flush();
 			echo $email["id"].": Sending email to ".$email["to"]." ... ";
 			
 			setsendingnow($email["id"]);
