@@ -136,97 +136,147 @@
                 // Create a new, fresh, empty instance of PHPMailer
                 $mail = new PHPMailer(true);
 
-                $mail->CharSet = "UTF-8";
+                $isError = false;
+                try {
 
-                if (SEND_METHOD == "smtp") {
-	                $mail->IsSMTP();
-	                $mail->Host = SMTP_SERVER;
+	                $mail->CharSet = "UTF-8";
 
-	                if (SMTP_IS_AUTHENTICATION) {
-	                    $mail->SMTPAuth = true;
-	                    $mail->Port = 25;
-	                    $mail->Username = SMTP_AUTHENTICATION_USERNAME;
-	                    $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
+	                if (SEND_METHOD == "smtp") {
+		                $mail->IsSMTP();
+		                $mail->Host = SMTP_SERVER;
+
+		                if (SMTP_IS_AUTHENTICATION) {
+		                    $mail->SMTPAuth = true;
+		                    $mail->Port = 25;
+		                    $mail->Username = SMTP_AUTHENTICATION_USERNAME;
+		                    $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
+		                }
+		            }
+		            else if (SEND_METHOD == "sendmail")
+		            	$mail->IsSendmail();
+
+	                if ($email["replyto"] != "") {
+	                    if($email["replyto_name"] != "")
+	                        $mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
+	                    else
+	                        $mail->AddReplyTo($email["replyto"]);
 	                }
-	            }
-	            else if (SEND_METHOD == "sendmail")
-	            	$mail->IsSendmail();
+	                else {
+	                    $mail->AddReplyTo($email["from"]);
+	                }
 
-                if ($email["replyto"] != "") {
-                    if($email["replyto_name"] != "")
-                        $mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
-                    else
-                        $mail->AddReplyTo($email["replyto"]);
+	                $mail->From = $email["from"];
+	                if($email["from_name"] != "")
+	                    $mail->FromName = $email["from_name"];
+
+	                $to = $email["to"];
+
+	                $mail->AddAddress($to);
+
+	                $mail->Subject = $email["subject"];
+
+	                $mail->WordWrap = 80;
+
+	                $body = $email["content"];
+	                $body = preg_replace('/\\\\/','', $body);
+
+	                if($email["is_html"])
+	                    $mail->IsHTML(true);
+
+	                $mail->AltBody = "Please use an HTML compatible email viewer!";
+
+	                if($email["is_embed_images"])
+	                	embed_images($body, $mail);
+
+	                $mail->MsgHTML($body);
+
+	                if($email["content_nonhtml"] != "")
+	                    $mail->AltBody = $email["content_nonhtml"];
+
+	                if($email["list_unsubscribe_url"] != "")
+	                    $mail->AddCustomHeader("List-Unsubscribe: <".$email["list_unsubscribe_url"].">");
+
+	                // Add attachments
+	                if($email["attachments"]) {
+	                	$attachments = unserialize($email["attachments"]);
+	                	if (is_array($attachments)) {
+	                    	foreach ($attachments as $attachment) {
+
+	                    		if (!is_array($attachment))
+	                    			continue;
+
+	                    		if (!$attachment["fileName"])
+			                        $attachment["fileName"] = basename($attachment["path"]);
+
+			                    if (!$attachment["encoding"])
+			                        $attachment["encoding"] = "base64";
+
+			                    if (!$attachment["type"]) {
+			                        if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
+			                            if (!$mimeType = finfo_file($finfo, $attachment["path"]))
+			                            	throw new Exception("Can't guess mimetype for ".$attachment["path"]);
+			                            finfo_close($finfo);
+			                            $attachment["type"] = $mimeType;
+			                        }
+			                    }
+
+	                    		$mail->AddAttachment(
+	                    			$attachment["path"],
+	                    			$attachment["fileName"],
+	                    			$attachment["encoding"],
+	                    			$attachment["type"]
+	                    		);
+	                    	}
+	                    }
+	                }
+                
+                	$mail->Send();
+
+                } catch (phpmailerException $e) {
+
+                	$isError = true;
+                	$errorText = $e->getMessage();
+
+                } catch (Exception $e) {
+
+                	$isError = true;
+                	$errorText = $e->getMessage();
+
                 }
-                else {
-                    $mail->AddReplyTo($email["from"]);
-                }
 
-                $mail->From = $email["from"];
-                if($email["from_name"] != "")
-                    $mail->FromName = $email["from_name"];
+                if ($isError) {
 
-                $to = $email["to"];
+                	echo "Error while sending email: ".$errorText.", ";
+					
+					if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$errorText."] Cancelled: No more sending attempts allowed";
+						add_incidence($email["id"], $incidence_text);
+						cancel($email["id"]);
+						$logger->add_log_incidence(
+							array(
+								$email["id"],
+								$email["to"],
+								"Email cancelled",
+								"No more sending attempts allowed"
+							)
+						);
+						echo "No more attempts allowed, cancelled";
+					}
+					else {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$errorText."] Scheduled for one more try";
+						add_incidence($email["id"], $incidence_text);
+						$logger->add_log_incidence(array(
+							$email["id"],
+							$email["to"],
+							"Email rescheduled",
+							$incidence_text
+						));
+						echo "Scheduled for one more try";
+					}
 
-                $mail->AddAddress($to);
-
-                $mail->Subject = $email["subject"];
-
-                $mail->WordWrap = 80;
-
-                $body = $email["content"];
-                $body = preg_replace('/\\\\/','', $body);
-
-                if($email["is_html"])
-                    $mail->IsHTML(true);
-
-                $mail->AltBody = "Please use an HTML compatible email viewer!";
-
-                if($email["is_embed_images"])
-                	embed_images($body, $mail);
-
-                $mail->MsgHTML($body);
-
-                if($email["content_nonhtml"] != "")
-                    $mail->AltBody = $email["content_nonhtml"];
-
-                if($email["list_unsubscribe_url"] != "")
-                    $mail->AddCustomHeader("List-Unsubscribe: <".$email["list_unsubscribe_url"].">");
-
-                // Add attachments
-                if($email["attachments"]) {
-                	$attachments = unserialize($email["attachments"]);
-                	if (is_array($attachments)) {
-                    	foreach ($attachments as $attachment) {
-
-                    		if (!is_array($attachment))
-                    			continue;
-
-                    		if (!$attachment["fileName"])
-		                        $attachment["fileName"] = basename($attachment["path"]);
-
-		                    if (!$attachment["encoding"])
-		                        $attachment["encoding"] = "base64";
-
-		                    if (!$attachment["type"]) {
-		                        if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
-		                            $attachment["type"] = finfo_file($finfo, $attachment["path"]);
-		                            finfo_close($finfo);
-		                        }
-		                    }
-
-                    		if (!$mail->AddAttachment(
-                    			$attachment["path"],
-                    			$attachment["fileName"],
-                    			$attachment["encoding"],
-                    			$attachment["type"]
-                    		))
-                    			echo "Attached file \"".$attachment."\" could not be found or accessed. ";
-                    	}
-                    }
-                }
-
-                if ($mail->Send()) {
+                } else {
 					
 					mark_as_sent($email["id"]);
 					update_send_count($email["id"], $email["send_count"]+1);
@@ -242,39 +292,6 @@
 					
 					// Sleeping
 					usleep((DELIVERY_INTERVAL/100));
-
-				}
-				else {
-
-					echo "Error while sending email: ".$mail->ErrorInfo.", ";
-					
-					if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
-						update_error_count($email["id"], $email["error_count"]+1);
-						$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Cancelled: No more sending attempts allowed";
-						add_incidence($email["id"], $incidence_text);
-						cancel($email["id"]);
-						$logger->add_log_incidence(
-							array(
-								$email["id"],
-								$email["to"],
-								"Email cancelled",
-								"No more sending attempts allowed"
-							)
-						);
-						echo "No more attempts allowed, cancelled";
-					}
-					else {
-						update_error_count($email["id"], $email["error_count"]+1);
-						$incidence_text = "Error while sending email: [".$mail->ErrorInfo."] Scheduled for one more try";
-						add_incidence($email["id"], $incidence_text);
-						$logger->add_log_incidence(array(
-							$email["id"],
-							$email["to"],
-							"Email rescheduled",
-							$incidence_text
-						));
-						echo "Scheduled for one more try";
-					}
 
 				}
 

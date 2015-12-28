@@ -54,7 +54,7 @@
 			(
 				".$email_id.",
 				'".date("Y-n-j H:i:s")."',
-				'".$description."'
+				'".$db->safestring($description)."'
 			)
 		");
 	}

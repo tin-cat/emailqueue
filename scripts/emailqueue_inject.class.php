@@ -68,17 +68,22 @@
             $content_nonhtml = str_replace("\\'", "'", $content_nonhtml);
             $content_nonhtml = str_replace("'", "\'", $content_nonhtml);
 
-            // Prepare attachments array
+            // Prepare and check attachments array
             if ($attachments) {
                 if (!is_array($attachments)) {
                     echo "Emailqueue inject error: attachments parameter must be an array.";
                     return false;
                 }
-                foreach ($attachments as $attachment)
+                foreach ($attachments as $attachment) {
                     if (!is_array($attachment)) {
                         echo "Emailqueue inject error: Each attachment specified on the attachments array must be a hash array.";
                         return false;
                     }
+                    if (!file_exists($attachment["path"])) {
+                        echo "Emailqueue inject error: Can't open attached file for reading.";
+                        return false;
+                    }
+                }
             }
             
             $result = mysqli_query
