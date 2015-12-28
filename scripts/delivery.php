@@ -63,10 +63,36 @@
 			$emails[] = $row;
 		
 		$timecontrol_start = mktime();
+
+		$mail = new PHPMailer(true);
+
+		$mail->CharSet = "UTF-8";
+
+        if (SEND_METHOD == "smtp") {
+            $mail->IsSMTP();
+            $mail->Host = SMTP_SERVER;
+
+            if (SMTP_IS_AUTHENTICATION) {
+                $mail->SMTPAuth = true;
+                $mail->Port = 25;
+                $mail->Username = SMTP_AUTHENTICATION_USERNAME;
+                $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
+            }
+        }
+        else if (SEND_METHOD == "sendmail")
+        	$mail->IsSendmail();
 		
 		foreach ($emails as $email) {
+
+			$mail->clearAllRecipients();
+			$mail->clearAddresses();
+			$mail->clearCCs();
+			$mail->clearBCCs();
+			$mail->clearReplyTos();
+			$mail->clearAttachments();
+			$mail->clearCustomHeaders();
+
 			flush();
-			ob_flush();
 			echo $email["id"].": Sending email to ".$email["to"]." ... ";
 			
 			setsendingnow($email["id"]);
@@ -133,27 +159,8 @@
 
             if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && in_array($email["to"], $devel_emails))) {
 
-                // Create a new, fresh, empty instance of PHPMailer
-                $mail = new PHPMailer(true);
-
                 $isError = false;
                 try {
-
-	                $mail->CharSet = "UTF-8";
-
-	                if (SEND_METHOD == "smtp") {
-		                $mail->IsSMTP();
-		                $mail->Host = SMTP_SERVER;
-
-		                if (SMTP_IS_AUTHENTICATION) {
-		                    $mail->SMTPAuth = true;
-		                    $mail->Port = 25;
-		                    $mail->Username = SMTP_AUTHENTICATION_USERNAME;
-		                    $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
-		                }
-		            }
-		            else if (SEND_METHOD == "sendmail")
-		            	$mail->IsSendmail();
 
 	                if ($email["replyto"] != "") {
 	                    if($email["replyto_name"] != "")
