@@ -205,13 +205,13 @@
 	                    		if (!is_array($attachment))
 	                    			continue;
 
-	                    		if (!$attachment["fileName"])
+	                    		if (!isset($attachment["fileName"]))
 			                        $attachment["fileName"] = basename($attachment["path"]);
 
-			                    if (!$attachment["encoding"])
+			                    if (!isset($attachment["encoding"]))
 			                        $attachment["encoding"] = "base64";
 
-			                    if (!$attachment["type"]) {
+			                    if (!isset($attachment["type"])) {
 			                        if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
 			                            if (!$mimeType = finfo_file($finfo, $attachment["path"]))
 			                            	throw new Exception("Can't guess mimetype for ".$attachment["path"]);
