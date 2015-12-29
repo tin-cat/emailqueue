@@ -74,7 +74,7 @@
 
             if (SMTP_IS_AUTHENTICATION) {
                 $mail->SMTPAuth = true;
-                $mail->Port = 25;
+                $mail->Port = SMTP_PORT;
                 $mail->Username = SMTP_AUTHENTICATION_USERNAME;
                 $mail->Password = SMTP_AUTHENTICATION_PASSWORD;
             }
