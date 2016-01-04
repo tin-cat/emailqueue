@@ -29,7 +29,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 
 ##Changelog##
 
-* **Version 3.0.13**
+* **Version 3.1**
   * Finally Emailqueue supports attachments! See the "Hints" section for an interesting idea with this.
   * Super-powerful functionality to auto-embed all images in your messages as attachments, so they should appear really fast on the user's screen once received (no additional images to download by the client). Also, some email clients might show the images straightaway without asking the user to download them.
   * Much better documentation.
