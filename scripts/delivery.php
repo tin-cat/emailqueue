@@ -164,7 +164,17 @@
 
                         if ($email["custom_headers"]) {
                             $custom_headers = unserialize($email["custom_headers"]);
+
                             if (is_array($custom_headers)) {
+
+                                if (array_key_exists("Content-Transfer-Encoding", $custom_headers)) {
+                                    $mail->Encoding = $custom_headers["Content-Transfer-Encoding"];
+                                    // We don't want to iterate over this header again in the foreach cicle.
+                                    unset($custom_headers["Content-Transfer-Encoding"]);
+                                } else {
+                                    $mail->Encoding = CONTENT_TRANSFER_ENCODING;
+                                }
+
                                 foreach ($custom_headers as $header => $value) {
                                     if (!empty($value)) {
                                         $mail->addCustomHeader($header, $value);
