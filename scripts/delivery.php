@@ -163,7 +163,7 @@
                 try {
 
                         if ($email["custom_headers"]) {
-                            $custom_headers = unserialize($email["curstom_headers"]);
+                            $custom_headers = unserialize($email["custom_headers"]);
                             if (is_array($custom_headers)) {
                                 foreach ($custom_headers as $header => $value) {
                                     if (!empty($value)) {
