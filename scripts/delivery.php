@@ -162,6 +162,19 @@
                 $isError = false;
                 try {
 
+                        if ($email["custom_headers"]) {
+                            $custom_headers = unserialize($email["curstom_headers"]);
+                            if (is_array($custom_headers)) {
+                                foreach ($custom_headers as $header => $value) {
+                                    if (!empty($value)) {
+                                        $mail->addCustomHeader($header, $value);
+                                    } else {
+                                        $mail->addCustomHeader($header);
+                                    }
+                                }
+                            }
+                        }
+
 	                if ($email["replyto"] != "") {
 	                    if($email["replyto_name"] != "")
 	                        $mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
