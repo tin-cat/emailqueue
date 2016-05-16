@@ -183,6 +183,8 @@
                                     }
                                 }
                             }
+                        } else {
+                            $mail->Encoding = CONTENT_TRANSFER_ENCODING;
                         }
 
 	                if ($email["replyto"] != "") {
