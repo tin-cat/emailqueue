@@ -211,12 +211,14 @@
 	                if($email["is_html"]) {
 	                    $mail->IsHTML(true);
                             $mail->AltBody = "Please use an HTML compatible email viewer!";
+                            $mail->MsgHTML($body);
+                        } else {
+                            $mail->Body = $body;
                         }
 
 	                if($email["is_embed_images"])
 	                	embed_images($body, $mail);
 
-	                $mail->MsgHTML($body);
 
 	                if($email["content_nonhtml"] != "")
 	                    $mail->AltBody = $email["content_nonhtml"];
