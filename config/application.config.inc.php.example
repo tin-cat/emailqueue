@@ -18,7 +18,10 @@
 	define("SMTP_AUTHENTICATION_USERNAME", "");
 	define("SMTP_AUTHENTICATION_PASSWORD", "");
 	
-	define("PHPMAILER_LANGUAGE", "en");
+        define("CHARSET", "utf-8"); //Used in Content-Type Email Header
+        define("CONTENT_TRANSFER_ENCODING", "8bit"); //Content-Transfer-Encoding Email Header. May be 7bit, 8bit, quoted-printable or base64
+
+        define("PHPMAILER_LANGUAGE", "en");
 	
 	define("DEFAULT_TIMEZONE", "UTC");
 

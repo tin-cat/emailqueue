@@ -66,7 +66,7 @@
 
 		$mail = new PHPMailer(true);
 
-		$mail->CharSet = "UTF-8";
+		$mail->CharSet = CHARSET;
 
         if (SEND_METHOD == "smtp") {
             $mail->IsSMTP();
@@ -162,6 +162,27 @@
                 $isError = false;
                 try {
 
+                        if ($email["custom_headers"]) {
+                            $custom_headers = unserialize($email["custom_headers"]);
+
+                            if (is_array($custom_headers)) {
+
+                                if (array_key_exists("Content-Transfer-Encoding", $custom_headers)) {
+                                    $mail->Encoding = $custom_headers["Content-Transfer-Encoding"];
+                                    // We don't want to iterate over this header again in the foreach cicle.
+                                    unset($custom_headers["Content-Transfer-Encoding"]);
+                                } else {
+                                    $mail->Encoding = CONTENT_TRANSFER_ENCODING;
+                                }
+
+                                foreach ($custom_headers as $header => $value) {
+                                    $mail->AddCustomHeader($header, $value);
+                                }
+                            }
+                        } else {
+                            $mail->Encoding = CONTENT_TRANSFER_ENCODING;
+                        }
+
 	                if ($email["replyto"] != "") {
 	                    if($email["replyto_name"] != "")
 	                        $mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
@@ -187,15 +208,17 @@
 	                $body = $email["content"];
 	                $body = preg_replace('/\\\\/','', $body);
 
-	                if($email["is_html"])
+	                if($email["is_html"]) {
 	                    $mail->IsHTML(true);
-
-	                $mail->AltBody = "Please use an HTML compatible email viewer!";
+                            $mail->AltBody = "Please use an HTML compatible email viewer!";
+                            $mail->MsgHTML($body);
+                        } else {
+                            $mail->Body = $body;
+                        }
 
 	                if($email["is_embed_images"])
 	                	embed_images($body, $mail);
 
-	                $mail->MsgHTML($body);
 
 	                if($email["content_nonhtml"] != "")
 	                    $mail->AltBody = $email["content_nonhtml"];
