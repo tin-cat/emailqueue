@@ -208,10 +208,10 @@
 	                $body = $email["content"];
 	                $body = preg_replace('/\\\\/','', $body);
 
-	                if($email["is_html"])
+	                if($email["is_html"]) {
 	                    $mail->IsHTML(true);
-
-	                $mail->AltBody = "Please use an HTML compatible email viewer!";
+                            $mail->AltBody = "Please use an HTML compatible email viewer!";
+                        }
 
 	                if($email["is_embed_images"])
 	                	embed_images($body, $mail);
