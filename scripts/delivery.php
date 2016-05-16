@@ -176,11 +176,7 @@
                                 }
 
                                 foreach ($custom_headers as $header => $value) {
-                                    if (!empty($value)) {
-                                        $mail->addCustomHeader($header, $value);
-                                    } else {
-                                        $mail->addCustomHeader($header);
-                                    }
+                                    $mail->AddCustomHeader($header, $value);
                                 }
                             }
                         } else {
