@@ -51,7 +51,8 @@
             $content_nonhtml = "",
             $list_unsubscribe_url = "",
             $attachments = false,
-            $is_embed_images = false
+            $is_embed_images = false,
+            $custom_headers = array()
         ) {
             $this->db_connect();
         
@@ -85,6 +86,13 @@
                     }
                 }
             }
+
+            if ($custom_headers) {
+                if (!is_array($custom_headers)) {
+                    echo "Emailqueue inject error: custom headers parameter must be an array.";
+                    return false;
+                }
+            }
             
             $result = mysqli_query
             (
@@ -116,7 +124,8 @@
 						content_nonhtml,
 						list_unsubscribe_url,
                         attachments,
-                        is_embed_images
+                        is_embed_images,
+                        custom_headers
 					)
 					values
 					(
@@ -144,7 +153,8 @@
 						'".$content_nonhtml."',
 						'".$list_unsubscribe_url."',
                         ".($attachments ? "'".serialize($attachments)."'" : "null").",
-                        ".($is_embed_images ? "1" : "0")."
+                        ".($is_embed_images ? "1" : "0").",
+                        ".($custom_headers ? "'".serialize($custom_headers)."'" : "null")."
 					)
 				"
 			);
