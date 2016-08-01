@@ -71,6 +71,7 @@
         if (SEND_METHOD == "smtp") {
             $mail->IsSMTP();
             $mail->Host = SMTP_SERVER;
+            $mail->SMTPKeepAlive = true;
 
             if (SMTP_IS_AUTHENTICATION) {
                 $mail->SMTPAuth = true;
@@ -346,6 +347,8 @@
                 break;
 			}
 		}
+
+		$mail->SmtpClose();
 	}
 	
 	echo "Process ended on: ".date("j/n/Y H:i.s")."\n";
