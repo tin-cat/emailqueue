@@ -4,7 +4,7 @@ CREATE TABLE `blacklist` (
   `date_blocked` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `test` (
+CREATE TABLE IF NOT EXISTS `emails` (
   `id` int(11) unsigned NOT NULL COMMENT 'Unique auto increment id column. Do not specify this field when manually inserting.',
   `foreign_id_a` int(11) unsigned DEFAULT NULL COMMENT 'Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.',
   `foreign_id_b` int(11) DEFAULT NULL COMMENT 'Optional, a secondary id number for your internal records.',
