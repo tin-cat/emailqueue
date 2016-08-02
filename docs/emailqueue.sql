@@ -4,7 +4,7 @@ CREATE TABLE `blacklist` (
   `date_blocked` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `emails` (
+CREATE TABLE IF NOT EXISTS `test` (
   `id` int(11) unsigned NOT NULL COMMENT 'Unique auto increment id column. Do not specify this field when manually inserting.',
   `foreign_id_a` int(11) unsigned DEFAULT NULL COMMENT 'Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.',
   `foreign_id_b` int(11) DEFAULT NULL COMMENT 'Optional, a secondary id number for your internal records.',
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `emails` (
   `list_unsubscribe_url` varchar(255) DEFAULT NULL COMMENT 'Optional. The URL where users can unsubscribe from the newsletter. Highly recommended.',
   `attachments` text CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT 'A serialized array of hash arrays specifying the files to be attached to this email. See example.php on how to build this array.',
   `is_embed_images` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Whether to automatically convert <IMG ... /> tags found on the email content to embedded images that are transferred along with the email itself instead of being referenced to external URLs. Can bring you some interesting benefits, but also hugely increases the data transfer.',
-  `custom_headers` text CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT 'A serialized array with custom headers to be added when sending with PHPMailer.  NB! The value should not be an empty string, in spite of the fact that PHPMailer::addCustomHeader() allows it.'
+  `custom_headers` text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'A serialized array with custom headers to be added when sending with PHPMailer.  NB! The value should not be an empty string, in spite of the fact that PHPMailer::addCustomHeader() allows it.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `incidences` (

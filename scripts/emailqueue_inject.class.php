@@ -93,7 +93,7 @@
                     return false;
                 }
             }
-            
+
             $result = mysqli_query
             (
 				$this->connectionid,
