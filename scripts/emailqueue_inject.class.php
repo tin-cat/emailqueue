@@ -174,6 +174,55 @@
             return $timestamp+$offset;
         }
 
+        /**
+         * Deletes all emails from the database that have already been delivered.
+         * Useful if for some reason you need to clean your queue without losing any emails that have yet to be sent.
+         * @return boolean True on success, false otherwise
+         */
+        function empty_delivered() {
+            $this->db_connect();
+            $result = mysqli_query($this->connectionid, "
+                delete from
+                    emails
+                where
+                    is_sent = 1
+            ");
+            $this->db_disconnect();
+            return $result ? true : false;
+        }
+
+        /**
+         * Deletes all emails that are in the queue waiting to be sent
+         * Useful if for some reason you need to clean your outgoing queue. This will cause the loss of some emails that should be sent.
+         * @return boolean True on success, false otherwise
+         */
+        function empty_queued() {
+            $this->db_connect();
+            $result = mysqli_query($this->connectionid, "
+                delete from
+                    emails
+                where
+                    is_sent = 0
+            ");
+            $this->db_disconnect();
+            return $result ? true : false;
+        }
+
+        /**
+         * Deletes all emails on the queue
+         * Useful if for some reason you need to completely clean your queue. This will cause the loss of some emails that should be sent.
+         * @return boolean True on success, false otherwise
+         */
+        function empty_all() {
+            $this->db_connect();
+            $result = mysqli_query($this->connectionid, "
+                delete from
+                    emails
+            ");
+            $this->db_disconnect();
+            return $result ? true : false;
+        }
+
         function destroy() {
             // Method deprecated, left for compatibility purposes. Will likely be removed on future versions.
         }
