@@ -229,7 +229,7 @@
 
 	                // Add attachments
 	                if($email["attachments"]) {
-	                	$attachments = unserialize($email["attachments"]);
+	                	$attachments = unserialize(base64_decode($email["attachments"]));
 	                	if (is_array($attachments)) {
 	                    	foreach ($attachments as $attachment) {
 
