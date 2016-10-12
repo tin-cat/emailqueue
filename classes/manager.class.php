@@ -54,7 +54,7 @@
             else {
                 $attachments = unserialize($message["attachments"]);
                 foreach ($attachments as $attachment)
-                    $attachmentsInfo .= $attachment["path"]."<br>";
+                    $attachments = unserialize(base64_decode($message["attachments"]));
             }
             
             $retr .=

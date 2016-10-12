@@ -154,7 +154,7 @@
 						'".$list_unsubscribe_url."',
                         ".($attachments ? "'".serialize($attachments)."'" : "null").",
                         ".($is_embed_images ? "1" : "0").",
-                        ".($custom_headers ? "'".serialize($custom_headers)."'" : "null")."
+                        ".($custom_headers ? "'".base64_encode(serialize($attachments))."'" : "null")."
 					)
 				"
 			);
