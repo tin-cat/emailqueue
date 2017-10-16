@@ -3,7 +3,7 @@
 <body>
 EMailqeue - PHP Inject class test
 <hr>
-<?
+<?php
 
     define("EMAILQUEUE_DIR", "./"); // Setup where emailqueue resides
 
