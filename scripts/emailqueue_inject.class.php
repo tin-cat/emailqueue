@@ -1,4 +1,11 @@
-<?
+<?php
+
+    /*
+		EMailqueue
+		Inject
+	*/
+
+    namespace Emailqueue;
 	
 	class emailqueue_inject {
         var $db_host;
@@ -8,8 +15,10 @@
         var $db;
         var $avoidpersistence;
         var $default_priority = 10;
+
+        private $connectionid;
         
-        function emailqueue_inject($db_host, $db_user, $db_password, $db_name, $avoidpersistence = false, $emailqueue_timezone = false) {
+        function __construct($db_host, $db_user, $db_password, $db_name, $avoidpersistence = false, $emailqueue_timezone = false) {
             $this->db_host = $db_host;
             $this->db_user = $db_user;
             $this->db_password = $db_password;
@@ -34,27 +43,39 @@
             mysqli_close($this->connectionid);
         }
         
-        function inject(
-            $foreign_id_a = null,
-            $foreign_id_b = null,
-            $priority = 10,
-            $is_inmediate = true,
-            $date_queued = null,
-            $is_html = false,
-            $from,
-            $from_name = "",
-            $to,
-            $replyto = "",
-            $replyto_name = "",
-            $subject,
-            $content,
-            $content_nonhtml = "",
-            $list_unsubscribe_url = "",
-            $attachments = false,
-            $is_embed_images = false,
-            $custom_headers = array()
-        ) {
+        function inject($p) {
+            $parameters = [
+                "foreign_id_a"=> [],
+                "foreign_id_b"=> [],
+                "priority" => ["default" => 10],
+                "is_immediate" => ["default" => true],
+                "date_queued"=> [],
+                "is_html"=> [],
+                "from"=> [],
+                "from_name"=> [],
+                "to"=> [],
+                "replyto"=> [],
+                "replyto_name"=> [],
+                "subject"=> [],
+                "content"=> [],
+                "content_nonhtml"=> [],
+                "list_unsubscribe_url"=> [],
+                "attachments"=> [],
+                "custom_headers"=> [],
+                "is_send_now"=> []
+            ];
+
+            while (list($key, $parameter) = each($parameters)) {
+                if ($parameter["default"] && !isset($p[$key]))
+                    $p[$key] = $parameter["default"];
+                if ($p[$key])
+                    $$key = $p[$key];
+            }
+
             $this->db_connect();
+
+            if ($is_send_now)
+                $is_immediate = true;
         
             $subject = str_replace("\\'", "'", $subject);
             $subject = str_replace("'", "\'", $subject);
@@ -94,8 +115,7 @@
                 }
             }
 
-            $result = mysqli_query
-            (
+            $result = mysqli_query(
 				$this->connectionid,
 				"
 					insert into emails
@@ -103,7 +123,7 @@
                         foreign_id_a,
                         foreign_id_b,
 						priority,
-						is_inmediate,
+						is_immediate,
 						is_sent,
 						is_cancelled,
 						is_blocked,
@@ -132,7 +152,7 @@
 						".($foreign_id_a ? $foreign_id_a : "null").",
 						".($foreign_id_b ? $foreign_id_b : "null").",
 						".($priority ? $priority : $this->default_priority).",
-						".($is_inmediate ? "1" : "0").",
+						".($is_immediate ? "1" : "0").",
 						0,
 						0,
 						0,
@@ -158,16 +178,33 @@
 					)
 				"
 			);
+            
+            if ($is_send_now) {
+                $email_id = mysqli_insert_id($this->connectionid);
+                if (!$result = mysqli_query($this->connectionid, "select * from emails where id = ".$email_id)) {
+                    echo "Emailqueue inject error: Couldn't retrieve the recently inserted email for 'send now' delivery.";
+                    return false;
+                }
+                $email = $result->fetch_assoc();
+                $result->free();
+
+                require_once(dirname(__FILE__)."/../common.inc.php");
+                
+                $mail = buildPhpMailer();
+                deliver_email($mail, $email, false);
+                $mail->SmtpClose();
+            }
+
             $this->db_disconnect();
             
             return $result ? true : false;
         }
 
         function timestamp_adjust($timestamp, $to_timezone) {
-            $datetime_object = new DateTime("@".$timestamp);
+            $datetime_object = new \DateTime("@".$timestamp);
 
-            $from_timezone_object = new DateTimeZone(date_default_timezone_get());
-            $to_timezone_object = new DateTimeZone($to_timezone);
+            $from_timezone_object = new \DateTimeZone(date_default_timezone_get());
+            $to_timezone_object = new \DateTimeZone($to_timezone);
 
             $offset = $to_timezone_object->getOffset($datetime_object) - $from_timezone_object->getOffset($datetime_object);
 
@@ -223,9 +260,8 @@
             return $result ? true : false;
         }
 
-        function destroy() {
-            // Method deprecated, left for compatibility purposes. Will likely be removed on future versions.
-        }
+        // Deprecated method, left for compatibility purposes. Will likely be removed on future versions.
+        function destroy() {}
 	}
 	
 ?>

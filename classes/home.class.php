@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class home {
 		function getinfo() {
@@ -30,15 +32,13 @@
 			$db->query("select count(*) as numberof from emails where is_sent = 0 and is_cancelled = 0 and is_blocked = 0");
 			$row = $db->fetchrow();
 			$messages_in_queue = $row["numberof"];
-
-            global $devel_emails;
 			
 			$retr .= "
                 <div class=block>
                     <div class=block_title>Status</div>
 		  			<div class=pairs>
                         <div class=pair><div class=key>Environment</div><div class=value>".(IS_DEVEL_ENVIRONMENT ? "Development" : "Production")."</div></div>
-                        ".(IS_DEVEL_ENVIRONMENT ? "<div class=pair><div class=key>Deliver only to</div><div class=value>".implode(", ", $devel_emails)."</div></div>" : "")."
+                        ".(IS_DEVEL_ENVIRONMENT ? "<div class=pair><div class=key>Deliver only to</div><div class=value>".implode(", ", DEVEL_EMAILS)."</div></div>" : "")."
                         <div class=pair><div class=key>Maximum delivery timeout</div><div class=value>".number_format(MAXIMUM_DELIVERY_TIMEOUT, 0, ".", ",")." seconds</div></div>
                         <div class=pair><div class=key>Delivery interval</div><div class=value>".number_format(DELIVERY_INTERVAL*10, 0, ".", ",")." ms.</div></div>
                         <div class=pair><div class=key>Maximum retry attempts</div><div class=value>".SENDING_RETRY_MAX_ATTEMPTS."</div></div>
@@ -67,7 +67,7 @@
 		  		from			emails
 		  		where			is_sent = 0
 		  		and				is_cancelled = 0
-		  		order by		is_inmediate desc, priority asc, (date_queued is null) asc, date_injected desc
+		  		order by		is_immediate desc, priority asc, (date_queued is null) asc, date_injected desc
 		  		limit           0, ".QUEUED_MESSAGES."
 		  	");
 		  	$list = $messages->get_list();

@@ -1,0 +1,1 @@
+ALTER TABLE `emails` CHANGE `is_inmediate` `is_immediate` TINYINT(1) UNSIGNED NULL DEFAULT '0' COMMENT 'Set it to true to queue this email to be sent as soon as possible (doesn\'t overrides priority setting, will be sent during regular delivery. maximum 1 minute delay)';

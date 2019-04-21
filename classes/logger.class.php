@@ -1,12 +1,14 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class logger {
 		var $filename_delivery;
 		var $filename_incidences;
 		
 		function logger() {
-			$this->filename_delivery = APP_DIR.LOGS_DIR."/".$this->get_log_filename("delivery");
-			$this->filename_incidences = APP_DIR.LOGS_DIR."/".$this->get_log_filename("incidences");
+			$this->filename_delivery = dirname(__FILE__).LOGS_DIR."/".$this->get_log_filename("delivery");
+			$this->filename_incidences = dirname(__FILE__).LOGS_DIR."/".$this->get_log_filename("incidences");
 			
 			/*
 			// Check for writable files if they already exists

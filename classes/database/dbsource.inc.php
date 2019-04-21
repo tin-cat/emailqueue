@@ -1,8 +1,10 @@
-<?
+<?php
 
 	/*
 		Basic version with minimum functionalities
 	*/
+
+	namespace Emailqueue;
 
 	class dbsource
 	{

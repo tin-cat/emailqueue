@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 	
 	class dbsource_oracle extends dbsource
 	{
@@ -10,7 +12,7 @@
 		var $row;
 		var $errors;
 		
-		function dbsource_oracle ($uid, $pwd, $schema)
+		function __construct ($uid, $pwd, $schema)
 		{
 			$this->dbsource ("oracle");
 			$this->uid		= $uid;

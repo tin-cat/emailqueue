@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 		
   	class dbsource_mysql extends dbsource
 	{
@@ -8,7 +10,7 @@
 		var $database;
 		var $connectionid;
 
-		function dbsource_mysql ($host, $uid, $pwd, $database = "", $avoidpersistence = false)
+		function __construct ($host, $uid, $pwd, $database = "", $avoidpersistence = false)
 		{
 			$this->dbsource ("mysql");
 			$this->host = $host;

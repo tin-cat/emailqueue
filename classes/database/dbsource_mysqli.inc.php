@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class dbsource_mysqli extends dbsource
 	{
@@ -8,7 +10,7 @@
 		var $database;
 		var $connectionid;
 
-		function dbsource_mysqli ($host, $uid, $pwd, $database = "")
+		function __construct($host, $uid, $pwd, $database = "")
 		{
 			$this->dbsource ("mysqli");
 			$this->host		= $host;
@@ -37,11 +39,11 @@
 
 		function query($query)
 		{
-            if(!parent::query($query))
+						if(!parent::query($query))
 				return false;
-            		
+								
 			if(!$this->result = mysqli_query($this->connectionid, $query))
-                echo $this->dump_error();
+								echo $this->dump_error();
 			
 			return $this->result;
 		}
@@ -74,7 +76,7 @@
 		
 		function run_seek_row($numrow)
 		{
-            return mysqli_data_seek($this->result, $numrow);
+						return mysqli_data_seek($this->result, $numrow);
 		}
 
 		function getinsertid ()
@@ -84,12 +86,12 @@
 		
 		function get_errno()
 		{
-		  return mysqli_errno($this->connectionid);
+			return mysqli_errno($this->connectionid);
 		}
 		
 		function get_err()
 		{
-		  return mysqli_error($this->connectionid);
+			return mysqli_error($this->connectionid);
 		}
 		
 		function dump_error()
@@ -98,7 +100,7 @@
 				return false;
 
 			$bt = debug_backtrace();
-            return
+						return
 				"<div style=\"margin: 5px; padding: 5px; background: #fe0; color: #444;\">".
 					"MySQL Error: (".$this->get_errno().")".$this->get_err()."<br>".
 					"Query: \"".$this->last_query."\"<br>".
@@ -111,10 +113,10 @@
 		}
 		
 		function safestring($string)
-        {
-            return mysqli_real_escape_string($this->connectionid, $string);
-        }
-        
+				{
+						return mysqli_real_escape_string($this->connectionid, $string);
+				}
+				
 	}
 
 ?>

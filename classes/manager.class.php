@@ -1,4 +1,6 @@
-<?
+<?php
+
+    namespace Emailqueue;
 
 	class manager {
 		function run() {
@@ -78,7 +80,7 @@
                             </div>
                             <div class=pair>
                                 <div class=key>Queued for inmediate sending</div>
-                                <div class=value>".($message["is_inmediate"] ? "Yes" : "No")."</div>
+                                <div class=value>".($message["is_immediate"] ? "Yes" : "No")."</div>
                             </div>
                             <div class=pair>
                                 <div class=key>Sent</div>
@@ -114,7 +116,7 @@
                                     ?
                                     $utils->date_specialformat(strtotime($message["date_queued"]))
                                     :
-                                    "none".($message["is_inmediate"] ? ", queued for inmediate sending" : ", and not queued for inmediate sending")                                
+                                    "none".($message["is_immediate"] ? ", queued for inmediate sending" : ", and not queued for inmediate sending")                                
                                 ).
                                 "</div>
                             </div>
@@ -169,7 +171,7 @@
 
                         </div>
                 </div>
-                <iframe class=\"message_preview\" src=\"?a=manager&aa=view_iframe_body&email_id=".$message["id"]."\"></iframe>
+                <iframe class=\"message_preview\" src=\"?a=manager&aa=view_iframe_body&email_id=".$message["id"]."\" style=\"background: #fff;\"></iframe>
             ";
             
             return $retr;

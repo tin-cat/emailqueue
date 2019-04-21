@@ -1,14 +1,13 @@
-<?
+<?php
 
 	/*
 		EMailqueue
-		Frontend component
+		Frontend
 	*/
+
+	namespace Emailqueue;
 	
-	define("LIB_DIR", "lib");
-	define("APP_DIR", "../");
-	
-	include APP_DIR."common.inc.php";
+	include_once dirname(__FILE__)."/../common.inc.php";
 
 	if (!($_SERVER['PHP_AUTH_USER'] == FRONTEND_USER && $_SERVER['PHP_AUTH_PW'] == FRONTEND_PASSWORD)) {
 		header("WWW-Authenticate: Basic realm=\"Emailqueue frontend\"");
@@ -23,19 +22,19 @@
 	
 	switch ($a) {
 		case "home":
-			include APP_DIR."classes/home.class.php";
+			include_once dirname(__FILE__)."/../classes/home.class.php";
 			$home = new home();
 			$out->add($home->getinfo());
 			break;
 		
 		case "manager":
-            include APP_DIR."classes/manager.class.php";
+            include_once dirname(__FILE__)."/../classes/manager.class.php";
             $manager = new manager();
             $out->add($manager->run());
             break;
 
 		case "servicetools":
-			include APP_DIR."classes/servicetools.class.php";
+			include_once dirname(__FILE__)."/../classes/servicetools.class.php";
 			$servicetools = new servicetools();
 			$out->add($servicetools->run());
 			break;

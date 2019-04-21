@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class html {
 

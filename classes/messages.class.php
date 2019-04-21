@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class messages {
 		function get_list() {
@@ -46,7 +48,7 @@
 		  	  				"delivered ".($row["send_count"] > 1 ? $row["send_count"]." times" : "once")."<br>"
 		  	  				:
 		  	  				(
-		  	  					$row["is_inmediate"]
+		  	  					$row["is_immediate"]
 		  	  					?
 		  	  					"Inmediate delivery<br>"
 		  	  					:
@@ -80,7 +82,7 @@
 		  	  			<td>".$row["priority"]."</td>
 		  	  			<td>".
 							(
-								$row["is_inmediate"]
+								$row["is_immediate"]
 								?
 								"Inmediately<br>"
 								:

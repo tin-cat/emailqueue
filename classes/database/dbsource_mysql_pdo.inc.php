@@ -1,4 +1,6 @@
-<?
+<?php
+
+	namespace Emailqueue;
 
 	class dbsource_mysql_pdo extends dbsource
 	{
@@ -13,7 +15,7 @@
 		var $pdo;
 		var $stmt;
 
-		function dbsource_mysql_pdo ($host, $uid, $pwd, $database = "", $charset = "utf8", $is_persistent = true, $is_emulate_prepares = false, $errmode = PDO::ERRMODE_EXCEPTION)
+		function __construct ($host, $uid, $pwd, $database = "", $charset = "utf8", $is_persistent = true, $is_emulate_prepares = false, $errmode = PDO::ERRMODE_EXCEPTION)
 		{
 			$this->dbsource ("mysql_pdo");
 			$this->host = $host;
