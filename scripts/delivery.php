@@ -15,10 +15,10 @@
 	echo "Emailqueue · Delivery\n";
     if (IS_DEVEL_ENVIRONMENT) {
         echo "Reminder: Running in development environment, ";
-        if (!DEVEL_EMAILS)
+        if (!$devel_emails)
             echo "no emails will be sent.\n";
         else
-            echo "only emails to ".implode(", ", DEVEL_EMAILS)." will be sent.\n";
+            echo "only emails to ".implode(", ", $devel_emails)." will be sent.\n";
     }s
 	echo "Maximum delivery timeout: ".(MAXIMUM_DELIVERY_TIMEOUT ? $utils->secondstohumantime(MAXIMUM_DELIVERY_TIMEOUT) : "unlimited")."\n";
 	echo "Delivery interval: ".(DELIVERY_INTERVAL ? number_format((DELIVERY_INTERVAL/100), 2, ",", "")." seconds" : "none")."\n";

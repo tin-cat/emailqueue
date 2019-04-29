@@ -170,6 +170,7 @@
 
 	function deliver_email(&$mail, $email, $isOutputVerbose = false) {
 		global $logger;
+		global $devel_emails;
 		
 		$mail->clearAllRecipients();
 		$mail->clearAddresses();
@@ -249,7 +250,7 @@
 				);
 			}
 
-		if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && is_array(DEVEL_EMAILS) && in_array($email["to"], DEVEL_EMAILS))) {
+		if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && is_array($devel_emails) && in_array($email["to"], $devel_emails))) {
 
 			$isError = false;
 			try {

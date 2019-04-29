@@ -32,9 +32,9 @@
 	define("LOGS_FILENAME_DATEFORMAT", "Y-m-d"); // The file name format for log files, as a parameter for the PHP date() function
 	define("LOGS_DATA_DATEFORMAT", "Y-m-d H:i:s"); // The format of the date as stored inside log files, as a parameter for the PHP date() function
 
-    define("IS_DEVEL_ENVIRONMENT", true); // When set to true, only emails addressed to emails into DEVEL_EMAILS array are sent
+    define("IS_DEVEL_ENVIRONMENT", true); // When set to true, only emails addressed to emails into $devel_emails array are sent
 
-    DEVEL_EMAILS = [
+    $devel_emails = [
         "me@email.com"
     ];
 ?>

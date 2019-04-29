@@ -31,13 +31,13 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 ##Changelog##
 
 * **Version 3.2**
+  * emailqueue_inject::inject method is now called differently, see the "How to use" section or example.php for for info.
   * "is_send_now" emailqueue_inject::inject parameter sends the email without waiting for the next queue processing event, perfect for those cases where you can't even wait a minute to have your email delivered.
   * Now uses composer for library dependencies.
   * Using standard <?php instead of the shorthand <? version for improved compatibility.
   * No need to configure LIB_DIR or APP_DIR anymore.
   * "is_inmediate" parameter typo solve, now it's called "is_immediate"
-  * emailqueue_inject::inject method is now called differently, see the "How to use" section or example.php for for info.
-
+  
 * **Version 3.1**
   * Finally Emailqueue supports attachments! See the "Hints" section for an interesting idea with this.
   * Super-powerful functionality to auto-embed all images in your messages as attachments, so they should appear really fast on the user's screen once received (no additional images to download by the client). Also, some email clients might show the images straightaway without asking the user to download them.
