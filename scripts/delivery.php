@@ -33,6 +33,8 @@
         $db->free();
     }
 
+	$now = mktime();
+
     // Query emails to be sent
 	$db->query("
 		select
