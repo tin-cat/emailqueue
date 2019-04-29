@@ -146,6 +146,7 @@
 	}
 
 	function deliver_emails(&$mail, $emails, $isOutputVerbose = false) {
+		global $logger;
 		$timecontrol_start = mktime();
 		
 		foreach ($emails as $email) {
