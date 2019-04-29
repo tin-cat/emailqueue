@@ -7,7 +7,7 @@
 
 	namespace Emailqueue;
 	
-	include_once dirname(__FILE__)."../common.inc.php";
+	require_once(dirname(__FILE__)."/../common.inc.php");
 	
 	header("content-type: text/plain");
 	set_time_limit(0);
