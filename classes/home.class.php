@@ -39,7 +39,7 @@
                     <div class=block_title>Status</div>
 		  			<div class=pairs>
                         <div class=pair><div class=key>Environment</div><div class=value>".(IS_DEVEL_ENVIRONMENT ? "Development" : "Production")."</div></div>
-                        ".(IS_DEVEL_ENVIRONMENT ? "<div class=pair><div class=key>Deliver only to</div><div class=value>".implode(", ", $devel_emails)."</div></div>" : "")."
+                        ".(IS_DEVEL_ENVIRONMENT && is_array($devel_emails) ? "<div class=pair><div class=key>Deliver only to</div><div class=value>".implode(", ", $devel_emails)."</div></div>" : "")."
                         <div class=pair><div class=key>Maximum delivery timeout</div><div class=value>".number_format(MAXIMUM_DELIVERY_TIMEOUT, 0, ".", ",")." seconds</div></div>
                         <div class=pair><div class=key>Delivery interval</div><div class=value>".number_format(DELIVERY_INTERVAL*10, 0, ".", ",")." ms.</div></div>
                         <div class=pair><div class=key>Maximum retry attempts</div><div class=value>".SENDING_RETRY_MAX_ATTEMPTS."</div></div>
