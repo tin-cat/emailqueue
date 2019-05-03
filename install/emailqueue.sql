@@ -3,7 +3,7 @@ CREATE TABLE `emails` (
   `foreign_id_a` int(11) UNSIGNED DEFAULT NULL COMMENT 'Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.',
   `foreign_id_b` int(11) DEFAULT NULL COMMENT 'Optional, a secondary id number for your internal records.',
   `priority` tinyint(2) UNSIGNED DEFAULT '10' COMMENT 'The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before.',
-  `is_immediate` tinyint(1) UNSIGNED DEFAULT '0' COMMENT 'Set it to true to send this email as soon as possible. (doesn''t overrides priority setting)',
+  `is_immediate` tinyint(1) UNSIGNED DEFAULT '0' COMMENT 'Set it to true to queue this email to be sent as soon as possible (doesn\'t overrides priority setting, will be sent during regular delivery. maximum 1 minute delay)',
   `is_sent` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Whether the message has been already delivered or not. Do not specify this field when manually inserting emails.',
   `is_cancelled` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Whether this email has been cancelled or not. Do not specify this field when manually inserting.',
   `is_blocked` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Whether this email has been blocked or not. Do not specify this field when manually inserting.',
