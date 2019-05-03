@@ -100,6 +100,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Install this new 3.2 version following the regular Install process.
 * Set up the same database connection parameters as your existing Emailqueue database. Note that some minor things have changed in db.config.inc.php and application.config.inc.php, so you cannot use the old ones.
 * Using your database manager, select your emailqueue database and run the install/migrate_from_v3.1_to_v3.2.sql SQL file.
+* run `$ composer update` on the installation dir to get the latest phpmailer libraries.
 
 
 # Migrating from versions older than v3.1 #
