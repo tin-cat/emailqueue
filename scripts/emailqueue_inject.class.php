@@ -32,7 +32,7 @@
         
         function db_connect() {
             if(!$this->connectionid = mysqli_connect($this->db_host, $this->db_user, $this->db_password)) {
-                echo "Emailqueue Inject class component: Cannot connect to database";
+                trigger_error("Emailqueue Inject class component: Cannot connect to database");
                 die;
             }
 			mysqli_select_db($this->connectionid, $this->db_name);
@@ -93,16 +93,16 @@
             // Prepare and check attachments array
             if ($attachments) {
                 if (!is_array($attachments)) {
-                    echo "Emailqueue inject error: attachments parameter must be an array.";
+                    trigger_error("Emailqueue inject error: attachments parameter must be an array.");
                     return false;
                 }
                 foreach ($attachments as $attachment) {
                     if (!is_array($attachment)) {
-                        echo "Emailqueue inject error: Each attachment specified on the attachments array must be a hash array.";
+                        trigger_error("Emailqueue inject error: Each attachment specified on the attachments array must be a hash array.");
                         return false;
                     }
                     if (!file_exists($attachment["path"])) {
-                        echo "Emailqueue inject error: Can't open attached file for reading.";
+                        trigger_error("Emailqueue inject error: Can't open attached file for reading.");
                         return false;
                     }
                 }
@@ -110,7 +110,7 @@
 
             if ($custom_headers) {
                 if (!is_array($custom_headers)) {
-                    echo "Emailqueue inject error: custom headers parameter must be an array.";
+                    trigger_error("Emailqueue inject error: custom headers parameter must be an array.");
                     return false;
                 }
             }
@@ -182,7 +182,7 @@
             if ($is_send_now) {
                 $email_id = mysqli_insert_id($this->connectionid);
                 if (!$result = mysqli_query($this->connectionid, "select * from emails where id = ".$email_id)) {
-                    echo "Emailqueue inject error: Couldn't retrieve the recently inserted email for 'send now' delivery.";
+                    trigger_error("Emailqueue inject error: Couldn't retrieve the recently inserted email for 'send now' delivery.");
                     return false;
                 }
                 $email = $result->fetch_assoc();
