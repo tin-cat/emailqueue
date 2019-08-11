@@ -32,8 +32,8 @@
 	
 	
 	require_once("classes/out.class.php");
-	global $out;
-	$out = new out();
+	global $output;
+	$output = new output();
 	
 	require_once("classes/html.class.php");
 	global $html;

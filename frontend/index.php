@@ -24,29 +24,29 @@
 		case "home":
 			include_once dirname(__FILE__)."/../classes/home.class.php";
 			$home = new home();
-			$out->add($home->getinfo());
+			$output->add($home->getinfo());
 			break;
 		
 		case "manager":
             include_once dirname(__FILE__)."/../classes/manager.class.php";
             $manager = new manager();
-            $out->add($manager->run());
+            $output->add($manager->run());
             break;
 
 		case "servicetools":
 			include_once dirname(__FILE__)."/../classes/servicetools.class.php";
 			$servicetools = new servicetools();
-			$out->add($servicetools->run());
+			$output->add($servicetools->run());
 			break;
 	}
 	
 	// Control cases wich don't need head nor footer
 	if ($utils->getglobal("aa") != "view_iframe_body") {
-	   $out->add_tobeggining($html->head());
-	   $out->add($html->foot());
+	   $output->add_tobeggining($html->head());
+	   $output->add($html->foot());
 	}
 	
-	$out->dump();
+	$output->dump();
 	
 	$db->disconnect();
 

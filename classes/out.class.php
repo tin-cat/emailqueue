@@ -2,7 +2,7 @@
 
 	namespace Emailqueue;
 
-	class out {
+	class output {
 		var $data;
 
 		function add($data) {
