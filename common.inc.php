@@ -31,25 +31,25 @@
 	$db->query("set names UTF8");
 	
 	
-	require_once("classes/out.class.php");
+	require("classes/out.class.php");
 	global $output;
-	$output = new output();
+	$output = new \Emailqueue\output;
 	
-	require_once("classes/html.class.php");
+	require("classes/html.class.php");
 	global $html;
-	$html = new html();
+	$html = new \Emailqueue\html;
 	
-	require_once("classes/utils.class.php");
+	require("classes/utils.class.php");
 	global $utils;
-	$utils = new utils();
+	$utils = new \Emailqueue\utils;
 	
-	require_once("classes/messages.class.php");
+	require("classes/messages.class.php");
 	global $messages;
-	$messages = new messages();
+	$messages = new \Emailqueue\messages;
 
-	require_once("classes/logger.class.php");
+	require("classes/logger.class.php");
 	global $logger;
-	$logger = new logger();
+	$logger = new \Emailqueue\logger;
 	
 	function checkemail($email) {
         return preg_match("/^[.\w-]+@([\w-]+\.)+[a-zA-Z]{2,15}$/", $email);

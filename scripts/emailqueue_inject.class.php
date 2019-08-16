@@ -159,7 +159,7 @@
 						0,
 						0,
 						0,
-						'".date("Y-n-j H:i:s", $this->timestamp_adjust(mktime(), $this->emailqueue_timezone))."',
+						'".date("Y-n-j H:i:s", $this->timestamp_adjust(time(), $this->emailqueue_timezone))."',
 						".($date_queued ? "'".date("Y-n-j H:i:s", $this->timestamp_adjust($date_queued, $this->emailqueue_timezone))."'" : "null").",
 						null,
 						".($is_html ? "1" : "0").",
