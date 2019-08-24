@@ -1,0 +1,5 @@
+ALTER TABLE `emails` CHANGE `from_name` `from_name` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;
+ALTER TABLE `emails` CHANGE `replyto_name` `replyto_name` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;
+ALTER TABLE `emails` CHANGE `subject` `subject` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;
+ALTER TABLE `emails` CHANGE `content` `content` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;
+ALTER TABLE `emails` CHANGE `content_nonhtml` `content_nonhtml` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL;

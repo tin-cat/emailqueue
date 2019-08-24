@@ -32,11 +32,17 @@
         
         function db_connect() {
             if(!$this->connectionid = mysqli_connect($this->db_host, $this->db_user, $this->db_password)) {
-                trigger_error("Emailqueue Inject class component: Cannot connect to database");
+                $this->error("Cannot connect to database on ".$this->db_host." for user ".$this->db_user);
                 die;
             }
-			mysqli_select_db($this->connectionid, $this->db_name);
-			mysqli_query($this->connectionid, "set names utf8");
+			if (!mysqli_select_db($this->connectionid, $this->db_name)) {
+				$this->error("Cannot select database ".$this->db_name);
+                die;
+			}
+			if (!mysqli_query($this->connectionid, "set names utf8mb4")) {
+				$this->error("Cannot set names to UTF8");
+                die;
+			}
         }
         
         function db_disconnect() {
@@ -93,16 +99,16 @@
             // Prepare and check attachments array
             if ($attachments) {
                 if (!is_array($attachments)) {
-                    trigger_error("Emailqueue inject error: attachments parameter must be an array.");
+                    $this->error("Attachments parameter must be an array.");
                     return false;
                 }
                 foreach ($attachments as $attachment) {
                     if (!is_array($attachment)) {
-                        trigger_error("Emailqueue inject error: Each attachment specified on the attachments array must be a hash array.");
+                        $this->error("Each attachment specified on the attachments array must be a hash array.");
                         return false;
                     }
                     if (!file_exists($attachment["path"])) {
-                        trigger_error("Emailqueue inject error: Can't open attached file for reading.");
+                        $this->error("Can't open attached file for reading.");
                         return false;
                     }
                 }
@@ -110,7 +116,7 @@
 
             if ($custom_headers) {
                 if (!is_array($custom_headers)) {
-                    trigger_error("Emailqueue inject error: custom headers parameter must be an array.");
+                    $this->error("Custom headers parameter must be an array.");
                     return false;
                 }
             }
@@ -178,11 +184,16 @@
 					)
 				"
 			);
+
+			if (!$result) {
+				$this->error("Error inserting message in the queue DB");
+                die;
+			}
             
             if ($is_send_now) {
                 $email_id = mysqli_insert_id($this->connectionid);
                 if (!$result = mysqli_query($this->connectionid, "select * from emails where id = ".$email_id)) {
-                    trigger_error("Emailqueue inject error: Couldn't retrieve the recently inserted email for 'send now' delivery.");
+                    $this->error("Couldn't retrieve the recently inserted email for 'send now' delivery.");
                     return false;
                 }
                 $email = $result->fetch_assoc();
@@ -252,16 +263,14 @@
          */
         function empty_all() {
             $this->db_connect();
-            $result = mysqli_query($this->connectionid, "
-                delete from
-                    emails
-            ");
+            $result = mysqli_query($this->connectionid, "delete from emails");
             $this->db_disconnect();
             return $result ? true : false;
         }
 
-        // Deprecated method, left for compatibility purposes. Will likely be removed on future versions.
-        function destroy() {}
+        function error($description) {
+			throw new \Exception($description);
+		}
 	}
 	
 ?>

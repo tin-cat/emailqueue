@@ -5,7 +5,7 @@
 
 	namespace Emailqueue;
 
-	define("VERSION", "3.2");
+	define("VERSION", "3.3");
 	define("OFFICIAL_PAGE_URL", "https://github.com/tin-cat/emailqueue");
 
 	require_once(dirname(__FILE__)."/config/db.config.inc.php");
@@ -24,12 +24,11 @@
 		EMAILQUEUE_DB_DATABASE
 	);
 	if (!$db->connect()) {
-		echo "Cannot connect to database";
+		throw new EmailqueueException("Cannot connect to database");
 		die;
 	}
 	
 	$db->query("set names UTF8");
-	
 	
 	require("classes/out.class.php");
 	global $output;
@@ -154,8 +153,9 @@
 			
 			// Check if maximum delivery timeout have been reached
 			if ((mktime() - $timecontrol_start) > MAXIMUM_DELIVERY_TIMEOUT) {
-				if ($isOutputVerbose)
+				if ($isOutputVerbose) {
                 	echo "Delivery proccess automatically stopped before it finished because of too many time spent on delivering. Time spent: ".(mktime() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds\n"; 
+				}
                 $logger->add_log_incidence(
                     array(
                         0,

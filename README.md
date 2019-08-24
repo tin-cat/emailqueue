@@ -22,10 +22,14 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Inject any number of emails super-fast and inmediately free your app to do other things. Let Emailqueue do the job in the background.
 * Prioritize emails: Specify a priority when injecting an email and it will be sent before any other queued emails with lower priorities. E.g: You can inject 100k emails for a newsletter with priority 10 (they will take a while to be sent), and still inject an important email (like a password reminder message) with priority 1 to be sent ASAP even before the huge newsletter has been sent.
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
-* The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown man.
+* The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
 
 # Changelog #
+* **Version 3.3**
+  * Support for Emoji.
+  * Errors are now thrown using standard PHP Exceptions and are easily catchable.
+  
 * **Version 3.2**
   * Switched to MIT license, now Emailqueue can be used in commercial, non GNU-GPL projects.
   * emailqueue_inject::inject method is now called differently, see the "How to use" section or example.php for for info.
@@ -33,7 +37,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
   * Now uses composer for library dependencies.
   * Using standard <?php instead of the shorthand <? version for improved compatibility.
   * No need to configure LIB_DIR or APP_DIR anymore.
-  * "is_inmediate" parameter typo solve, now it's called "is_immediate"
+  * "is_inmediate" parameter typo solve876543	, now it's called "is_immediate"
   
 * **Version 3.1**
   * Finally Emailqueue supports attachments! See the "Hints" section for an interesting idea with this.
@@ -49,6 +53,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Recode the file logging system.
 * Recode it to modern standards.
 * A way to provide secured hard-links to view individual emails, so that a hard link can be included within the email to the user with a link like "Can't see this message? click here to see it in your browser"
+* A better back-end to explore the queue in realtime, plus some beautiful statistical graphs.
 
 # How to install #
 * Clone the emailqueue repository wherever you want it.
@@ -95,21 +100,19 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
     * Send emails using the provided emailqueue_inject PHP class found in scripts/emailqueue_inject.class.php. See an example on how to use this class in example.php
     * You can also inject messages to the queue by manually inserting them on the database via SQL (Insert in the "emails" table, read the field comments for detailed explanations)
 
+# Migrate from Version 3.2 to Version 3.3 #
+* Run `$ git pull` in your emailqueue directory to get the latest version.
+* Using your database manager, select your emailqueue database and run the install/migrate_from_v3.2_to_v3.2.sql SQL file.
 
-# Migrate to Version 3.2 #
+# Migrate from Version 3.1 to Version 3.2 #
 * Install this new 3.2 version following the regular Install process.
 * Set up the same database connection parameters as your existing Emailqueue database. Note that some minor things have changed in db.config.inc.php and application.config.inc.php, so you cannot use the old ones.
 * Using your database manager, select your emailqueue database and run the install/migrate_from_v3.1_to_v3.2.sql SQL file.
-* run `$ composer update` on the installation dir to get the latest phpmailer libraries.
+* Run `$ composer update` on the installation dir to get the latest phpmailer libraries.
 
 
 # Migrating from versions older than v3.1 #
-If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, execute the following SQL in your emailqueue database in order to migrate:
-
-`ALTER TABLE emails ADD attachments TEXT NULL DEFAULT NULL;`
-`ALTER TABLE emails ADD is_embed_images TINYINT(1) NOT NULL DEFAULT 0;`
-
-No other changes are needed for the migration.
+If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, using your database manager, select your emailqueue database and run the install/migrate_from_versions_older_than_v3.1.sql SQL file.
 
 # How to use #
 The file example.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class, which is the recommended method. Here's what to do, anyway:
