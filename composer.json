@@ -1,4 +1,8 @@
 {
+    "name": "tin-cat/emailqueue",
+    "description": "A library to process emails in php",
+    "type": "library",
+    "license": "GNU GPL v2.0",
     "require": {
         "phpmailer/phpmailer": "^6.0"
     }
