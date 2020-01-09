@@ -9,21 +9,21 @@
 	
 	include_once dirname(__FILE__)."/../common.inc.php";
 	
-	$key = $utils->getglobal("key");
+	$q = $utils->getglobal("q");
 
-	if (!$key || $key == "")
+	if (!$q["key"] || $q["key"] == "")
 		apiResult(false, "No API key passed");
 
-	if ($key != API_KEY) {
+	if ($q["key"] != API_KEY) {
 		sleep(rand(1, 3));
 		apiResult(false, "Wrong API key");
 	}
 	
-	$message = json_decode($utils->getglobal("message"));
+	$message = json_decode($q["message"]);
 	if (is_null($message))
 		apiResult(false, "Can't decode passed message Json");
 
-	$messages = json_decode($utils->getglobal("messages"));
+	$messages = json_decode($q["messages"]);
 	if (is_null($messages))
 		apiResult(false, "Can't decode passed messages Json");
 	
