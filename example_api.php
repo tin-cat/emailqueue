@@ -7,7 +7,7 @@
 <?php
 
 	$result = emailqueueApiCall(
-		"http://127.0.0.1/api",
+		"http://127.0.0.1/api/",
 		"asfKkj3=m2345k",
 		[
 			"from" => "me@domain.com",
