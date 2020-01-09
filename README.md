@@ -192,6 +192,8 @@ The API will respond with a Json object containing the following keys:
  * result: True if the email or emails were injected ok, false otherwise.
  * errorDescription: A decription of the error, if any.
 
+Take a look at the provided example_api.php to see an example on how to call the API in PHP.
+
 # Emailqueue injection keys #
 Whenever you inject an email using the emailqueue_inject class, calling the API or manually inserting into Emailqueue's database, these are the keys you can use and their description:
 
