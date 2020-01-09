@@ -63,7 +63,7 @@
 		}
 
 		function date_specialformat($time, $is_ago_remaining = true) {
-			$retr .= "<b>".date("H:i.s", $time)."</b>";
+			$retr = "<b>".date("H:i.s", $time)."</b>";
 			// If it's today
 			if(date("j/n/Y", $time) == date("j/n/Y"))	
 				$retr .= " today";

@@ -68,7 +68,8 @@
                 "list_unsubscribe_url"=> ["default" => false],
                 "attachments"=> ["default" => false],
                 "custom_headers"=> ["default" => false],
-                "is_send_now"=> ["default" => false]
+                "is_send_now"=> ["default" => false],
+				"is_embed_images"=> ["default" => false]
             ];
 
 			foreach ($parameters as $key => $parameter) {

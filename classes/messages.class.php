@@ -12,7 +12,7 @@
 		  	if (!$db->isanyresult())
 		  		return false;
 		  	
-		  	$retr .=
+		  	$retr =
 		  	"
 		  		<table class=tableMessages>
 		  		<tr>
