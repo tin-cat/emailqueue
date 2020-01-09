@@ -38,6 +38,8 @@
 	
 	$db->disconnect();
 
+	apiResult(true);
+
 	function apiResult($isOk, $description = false) {
 		echo json_encode([
 			"result" => $isOk,
