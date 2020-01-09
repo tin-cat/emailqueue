@@ -18,13 +18,13 @@
 
 	if ($q["key"] != API_KEY) {
 		sleep(rand(1, 3));
-		apiResult(false, "Wrong API key ".$q["key"]." != ".API_KEY);
+		apiResult(false, "Wrong API key");
 	}
 	
-	if ($q["message"] && $q["messages"])
+	if (isset($q["message"]) && isset($q["messages"]))
 		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 
-	if ($q["message"])
+	if (isset($q["message"]))
 		$q["messages"][] = $q["message"];
 	
 	foreach ($messages as $message) {
