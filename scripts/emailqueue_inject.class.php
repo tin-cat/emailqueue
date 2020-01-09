@@ -51,28 +51,28 @@
         
         function inject($p) {
             $parameters = [
-                "foreign_id_a"=> [],
-                "foreign_id_b"=> [],
+                "foreign_id_a"=> ["default" => false],
+                "foreign_id_b"=> ["default" => false],
                 "priority" => ["default" => 10],
                 "is_immediate" => ["default" => true],
-                "date_queued"=> [],
+                "date_queued"=> ["default" => false],
                 "is_html"=> ["default" => true],
-                "from"=> [],
-                "from_name"=> [],
-                "to"=> [],
-                "replyto"=> [],
-                "replyto_name"=> [],
-                "subject"=> [],
-                "content"=> [],
-                "content_nonhtml"=> [],
-                "list_unsubscribe_url"=> [],
-                "attachments"=> [],
-                "custom_headers"=> [],
-                "is_send_now"=> []
+                "from"=> ["default" => false],
+                "from_name"=> ["default" => false],
+                "to"=> ["default" => false],
+                "replyto"=> ["default" => false],
+                "replyto_name"=> ["default" => false],
+                "subject"=> ["default" => false],
+                "content"=> ["default" => false],
+                "content_nonhtml"=> ["default" => false],
+                "list_unsubscribe_url"=> ["default" => false],
+                "attachments"=> ["default" => false],
+                "custom_headers"=> ["default" => false],
+                "is_send_now"=> ["default" => false]
             ];
 
-            while (list($key, $parameter) = each($parameters)) {
-                if ($parameter["default"] && !isset($p[$key]))
+			foreach ($parameters as $key => $parameter) {
+                if (isset($parameter["default"]) && !isset($p[$key]))
                     $p[$key] = $parameter["default"];
                 if ($p[$key])
                     $$key = $p[$key];
