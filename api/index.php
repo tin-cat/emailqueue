@@ -27,15 +27,15 @@
 		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 
 	if (isset($q["message"]))
-		$q["messages"][] = $q["message"];
+		$q["messages"] = [$q["message"]];
 	
 	foreach ($q["messages"] as $message) {
 		if (!isset($message["from"]))
-			apiResult(false, "Key \"from\" is required");
+			apiResult(false, "\"from\" is required");
 		if (!isset($message["to"]))
-			apiResult(false, "Key \"to\" is required");
+			apiResult(false, "\"to\" is required");
 		if (!isset($message["subject"]))
-			apiResult(false, "Key \"subject\" is required");
+			apiResult(false, "\"subject\" is required");
 		
 		try {
 			$result = $emailqueue_inject->inject($message);
