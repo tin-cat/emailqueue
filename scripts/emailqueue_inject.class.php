@@ -189,7 +189,7 @@
                 die;
 			}
             
-            if ($p["is_send_now"]{
+            if ($p["is_send_now"]) {
                 $email_id = mysqli_insert_id($this->connectionid);
                 if (!$result = mysqli_query($this->connectionid, "select * from emails where id = ".$email_id)) {
                     $this->error("Couldn't retrieve the recently inserted email for 'send now' delivery.");
