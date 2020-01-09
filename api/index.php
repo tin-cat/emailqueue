@@ -18,9 +18,6 @@
 		sleep(rand(1, 3));
 		apiResult(false, "Wrong API key");
 	}
-
-	if ($message && $messages)
-		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 	
 	$message = json_decode($utils->getglobal("message"));
 	if (is_null($message))
@@ -29,6 +26,9 @@
 	$messages = json_decode($utils->getglobal("messages"));
 	if (is_null($messages))
 		apiResult(false, "Can't decode passed messages Json");
+	
+	if ($message && $messages)
+		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 
 	if ($message)
 		$messages[] = $message;
