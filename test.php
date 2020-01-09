@@ -85,7 +85,10 @@
 			]
 		);
 
-		echo "<b>Api call result:</b><br><pre>".print_r($result, true)."</pre>";
+		if ($result["result"])
+			echo "Email queued into Emailqueue succesfully";
+		else
+			echo "Error queueing message into Emailqueue: ".$result["description"];
 	}
 
     function emailqueueApiCall($endpoint, $key, $messages = false) {
