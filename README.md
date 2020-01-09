@@ -151,15 +151,15 @@ Call your endpoint by making an HTTP request with the a parameter called ***q***
 An example value for the ***q*** POST parameter to inject a single email would be:
 
 ```
-	{
-		"key":"your_api_key",
-		"message": {
-			"from":"me@domain.com",
-			"to":"him@domain.com",
-			"subject":"Just testing",
-			"content":"This is just an email to test Emailqueue"
-		}
+{
+	"key":"your_api_key",
+	"message": {
+		"from":"me@domain.com",
+		"to":"him@domain.com",
+		"subject":"Just testing",
+		"content":"This is just an email to test Emailqueue"
 	}
+}
 ```
 
 To inject multiple messages in a single API call, use the key "messages" instead of "message":
@@ -168,23 +168,23 @@ To inject multiple messages in a single API call, use the key "messages" instead
 An example value for the ***q*** POST parameter to inject multiple emails would be:
 
 ```
-	{
-		"key":"your_api_key",
-		"messages": {
-			{
-				"from":"me@domain.com",
-				"to":"him@domain.com",
-				"subject":"Just testing",
-				"content":"This is just an email to test Emailqueue"
-			},
-			{
-				"from":"me@domain.com",
-				"to":"him@domain.com",
-				"subject":"Testing again",
-				"content":"This is another test"
-			}
+{
+	"key":"your_api_key",
+	"messages": {
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Just testing",
+			"content":"This is just an email to test Emailqueue"
+		},
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Testing again",
+			"content":"This is another test"
 		}
 	}
+}
 ```
 
 The API will respond with a Json object containing the following keys:
