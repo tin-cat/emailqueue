@@ -35,7 +35,7 @@
 				"
 					<div id=\"head\">
 					<img src=\"gfx/img/logo_small.png\" class=\"logo\" title=\"Emailqueue\" />
-					<div class=\"title\">Emailqueue v".VERSION."<br>".date("d.m.Y H'i\"s e", mktime())."<br><a href=\"".OFFICIAL_PAGE_URL."\" target=\"_newwindow\">official page</a></div>
+					<div class=\"title\">Emailqueue v".VERSION."<br>".date("d.m.Y H'i\"s e", time())."<br><a href=\"".OFFICIAL_PAGE_URL."\" target=\"_newwindow\">official page</a></div>
 					</div>
 				";
 		}

@@ -25,7 +25,7 @@
 			$messages_injected_today = $row["numberof"];
 			
 			// Get total number of messages injected last hour
-			$db->query("select count(*) as numberof from emails where date_injected >= '".date("Y-n-j H:i:s", mktime()-(60*60))."'");
+			$db->query("select count(*) as numberof from emails where date_injected >= '".date("Y-n-j H:i:s", time()-(60*60))."'");
 			$row = $db->fetchrow();
 			$messages_injected_lasthour = $row["numberof"];
 			
@@ -34,7 +34,7 @@
 			$row = $db->fetchrow();
 			$messages_in_queue = $row["numberof"];
 			
-			$retr .= "
+			$retr = "
                 <div class=block>
                     <div class=block_title>Status</div>
 		  			<div class=pairs>

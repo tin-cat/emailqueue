@@ -5,7 +5,7 @@
 
 	namespace Emailqueue;
 
-	define("VERSION", "3.3");
+	define("VERSION", "3.4");
 	define("OFFICIAL_PAGE_URL", "https://github.com/tin-cat/emailqueue");
 
 	require_once(dirname(__FILE__)."/config/db.config.inc.php");
@@ -146,22 +146,22 @@
 
 	function deliver_emails(&$mail, $emails, $isOutputVerbose = false) {
 		global $logger;
-		$timecontrol_start = mktime();
+		$timecontrol_start = time();
 		
 		foreach ($emails as $email) {
 			deliver_email($mail, $email, $isOutputVerbose);
 			
 			// Check if maximum delivery timeout have been reached
-			if ((mktime() - $timecontrol_start) > MAXIMUM_DELIVERY_TIMEOUT) {
+			if ((time() - $timecontrol_start) > MAXIMUM_DELIVERY_TIMEOUT) {
 				if ($isOutputVerbose) {
-                	echo "Delivery proccess automatically stopped before it finished because of too many time spent on delivering. Time spent: ".(mktime() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds\n"; 
+                	echo "Delivery proccess automatically stopped before it finished because of too many time spent on delivering. Time spent: ".(time() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds\n"; 
 				}
                 $logger->add_log_incidence(
                     array(
                         0,
                         "",
                         "Maximum delivery timeout reached",
-                        "The delivery proccess have been automatically stopped before it finishes because of too many time spent on delivering. Time spent: ".(mktime() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds" 
+                        "The delivery proccess have been automatically stopped before it finishes because of too many time spent on delivering. Time spent: ".(time() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds" 
                     )
                 );
                 break;
@@ -406,7 +406,7 @@
 				
 				mark_as_sent($email["id"]);
 				update_send_count($email["id"], $email["send_count"]+1);
-				update_sentdate($email["id"], mktime());
+				update_sentdate($email["id"], time());
 				$logger->add_log_delivery(array(
 					$email["id"],
 					"Email delivered",

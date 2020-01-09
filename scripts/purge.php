@@ -27,7 +27,7 @@
 		and
 			is_sendingnow = 0
 		and
-			date_injected <= '".date("Y-n-j H:i:s", mktime()-(PURGE_OLDER_THAN_DAYS*24*60*60))."'
+			date_injected <= '".date("Y-n-j H:i:s", time()-(PURGE_OLDER_THAN_DAYS*24*60*60))."'
 	");
 	
 	if (!$db->isanyresult()) {

@@ -68,19 +68,19 @@
 			if(date("j/n/Y", $time) == date("j/n/Y"))	
 				$retr .= " today";
 			else
-			if(date("j/n/Y", $time) == date("j/n/Y", mktime()-(24*60*60)))
+			if(date("j/n/Y", $time) == date("j/n/Y", time()-(24*60*60)))
 				$retr .= " yesterday";
 			else
-			if(date("j/n/Y", $time) == date("j/n/Y", mktime()+(24*60*60)))
+			if(date("j/n/Y", $time) == date("j/n/Y", time()+(24*60*60)))
 				$retr .= " tomorrow";
 			else
 				$retr .= " ".date("j/n/y", $time);
 
 			if ($is_ago_remaining) {
-				if($time < mktime())
-					$retr .= " / ".$this->secondstohumantime(mktime() - $time)." ago";
+				if($time < time())
+					$retr .= " / ".$this->secondstohumantime(time() - $time)." ago";
 				else
-					$retr .= " / ".$this->secondstohumantime($time - mktime())." remaining";
+					$retr .= " / ".$this->secondstohumantime($time - time())." remaining";
 			}
 
 			return $retr;

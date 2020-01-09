@@ -33,7 +33,7 @@
         $db->free();
     }
 
-	$now = mktime();
+	$now = time();
 
     // Query emails to be sent
 	$db->query("

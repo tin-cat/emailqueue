@@ -25,7 +25,15 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
 
 
+# Docker version #
+There is an official docker compose project for Emailqueue that will get you a running Emailqueue server in a blink. Check it out: (https://github.com/tin-cat/emailqueue-docker).
+
+
 # Changelog #
+* **Version 3.4**
+  * Created the official docker compose project for Emailqueue (https://github.com/tin-cat/emailqueue-docker) that allows you to deploy a working emailqueue setup very easily.
+  * Added a simple HTTP API to queue emails, useful when running Emailqueue in an isolated server, or as a docker service.
+
 * **Version 3.3**
   * Support for Emoji.
   * Errors are now thrown using standard PHP Exceptions and are easily catchable.
@@ -57,8 +65,8 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 
 # How to install #
 * Clone the emailqueue repository wherever you want it.
-    * While It's not strictly mandatory to install emailqueue under a web public directory, doing so will let you access the frontend to monitor Emailqueue activity easily ".htaccess" files for Apache HTTPd are already properly placed to avoid sensible directories from being served publicly.
-    * For increased security, install emailqueue outside your public htdocs and then create a symbolic link to the frontend directory in your public htdocs.
+    * For security reasons, do not install Emailqueue in a web server public directory. Instead, create a new route on your web server configuration that points to the "frontend" directory of your Emailqueue installation.
+	* If you'll be using the API, create another route on your web server pointing to the "api" directory of your Emailqueue installation. As an additional security measure, make sure this route is only accesible by the hosts you'll be calling the API from, and you're serving it via HTTPS.
 
     `$ git clone https://github.com/tin-cat/emailqueue.git`
 
@@ -110,11 +118,10 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Using your database manager, select your emailqueue database and run the install/migrate_from_v3.1_to_v3.2.sql SQL file.
 * Run `$ composer update` on the installation dir to get the latest phpmailer libraries.
 
-
 # Migrating from versions older than v3.1 #
 If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, using your database manager, select your emailqueue database and run the install/migrate_from_versions_older_than_v3.1.sql SQL file.
 
-# How to use #
+# How to use if Emailqueue is on the same server as your code #
 The file example.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class, which is the recommended method. Here's what to do, anyway:
 
 * Include the following files (specify your path as needed):
@@ -125,7 +132,60 @@ The file example.php is a thoroughly documented example on how to send an email 
   
   `$emailqueue_inject = new emailqueue_inject(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);`
 
-* Send an email by calling the inject method of the emailqueue_inject object, passing a hash array with the following possible keys:
+* Send an email by calling the inject method of the emailqueue_inject object, passing a hash array with the keys as defined in the "Emailqueue injection keys" section of this document.
+
+# How to use via API calls #
+If you're running Emailqueue in an isolated server, or in a dockerized environment like the official Emailqueue docker compose project (https://github.com/tin-cat/emailqueue-docker), you should add emails to Emailqueue by calling the Emailqueue API via a standard HTTP request.
+
+The API endpoint URL would be like: https://<domain or IP>/<the route you defined on your webserver>
+Example of an API endpoint: https://192.168.1.100/emailqueue
+
+Call your endpoint by making an HTTP request with the following POST parameters:
+
+* key: The API_KEY as defined in your application.config.inc.php
+* message: A Json containing an array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
+  * Unfortunately, you cannot yet attach images when calling Emailqueue via API, so the "attachments" and "is_embed_images" keys won't have any affect when calling the API.
+
+An example value for the message POST parameter would be:
+
+`
+	{
+		"from":"me@domain.com",
+		"to":"him@domain.com",
+		"subject":"Just testing",
+		"content":"This is just an email to test Emailqueue"
+	}
+`
+
+To inject multiple messages in a single API call, use the POST parameter "messages" instead of "message":
+  * messages: A Json containing an array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
+
+An example value for the messages POST parameter would be:
+
+`
+	[
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Just testing",
+			"content":"This is just an email to test Emailqueue"
+		},
+		{
+			"from":"me@domain.com",
+			"to":"him@domain.com",
+			"subject":"Testing again",
+			"content":"This is another test"
+		}
+	]
+`
+
+The API will respond with a Json object containing the following keys:
+
+ * result: True if the email or emails were injected ok, false otherwise.
+ * errorDescription: A decription of the error, if any.
+
+# Emailqueue injection keys #
+Whenever you inject an email using the emailqueue_inject class, calling the API or manually inserting into Emailqueue's database, these are the keys you can use and their description:
 
   * **foreign_id_a**: Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.
   * **foreign_id_b**: Optional, a secondary id number for your internal records.

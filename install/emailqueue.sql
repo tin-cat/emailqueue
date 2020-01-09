@@ -14,32 +14,32 @@ CREATE TABLE `emails` (
   `date_queued` datetime DEFAULT NULL COMMENT 'The date/time when this email should be delivered. Specify this field when manually inserting if you want the message to be delivered in the future.',
   `date_sent` datetime DEFAULT NULL COMMENT 'The date/time this email was delivered. Do not specify this field when manually inserting.',
   `is_html` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Whether this email''s content is HTML.',
-  `from` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The email address of the sender.',
-  `from_name` varchar(255) CHARACTER SET utf8 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Optional. The name of the sender.',
-  `to` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The email address of the recipient.',
-  `replyto` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'The email addess where replies to this message will be sent by default.',
-  `replyto_name` varchar(255) CHARACTER SET utf8 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'The name where this email will be replied by default.',
-  `subject` tinytext CHARACTER SET utf8 COLLATE utf8mb4_bin COMMENT 'The email''s subject',
-  `content` longtext CHARACTER SET utf8 COLLATE utf8mb4_bin COMMENT 'The content of the email. If HTML, be sure to set the is_html field to 1',
-  `content_nonhtml` longtext CHARACTER SET utf8 COLLATE utf8mb4_bin COMMENT 'Optional. A plain-text version of the email for old clients.',
+  `from` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The email address of the sender.',
+  `from_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Optional. The name of the sender.',
+  `to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The email address of the recipient.',
+  `replyto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The email addess where replies to this message will be sent by default.',
+  `replyto_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The name where this email will be replied by default.',
+  `subject` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'The email''s subject',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'The content of the email. If HTML, be sure to set the is_html field to 1',
+  `content_nonhtml` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Optional. A plain-text version of the email for old clients.',
   `list_unsubscribe_url` varchar(255) DEFAULT NULL COMMENT 'Optional. The URL where users can unsubscribe from the newsletter. Highly recommended.',
-  `attachments` text CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT 'A serialized array of hash arrays specifying the files to be attached to this email. See example.php on how to build this array.',
+  `attachments` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'A serialized array of hash arrays specifying the files to be attached to this email. See example.php on how to build this array.',
   `is_embed_images` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Whether to automatically convert <IMG ... /> tags found on the email content to embedded images that are transferred along with the email itself instead of being referenced to external URLs. Can bring you some interesting benefits, but also hugely increases the data transfer.',
   `custom_headers` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `incidences` (
   `id` int(11) UNSIGNED NOT NULL,
   `email_id` int(11) UNSIGNED DEFAULT NULL,
   `date_incidence` datetime DEFAULT NULL,
   `description` longtext
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `blacklist` (
   `id` int(11) UNSIGNED NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `date_blocked` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 ALTER TABLE `blacklist`
