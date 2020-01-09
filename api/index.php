@@ -9,7 +9,7 @@
 	
 	include_once dirname(__FILE__)."/../common.inc.php";
 	
-	$q = json_decode($utils->getglobal("q"));
+	$q = json_decode($utils->getglobal("q"), true);
 	if (is_null($q))
 		apiResult(false, "Can't decode query");
 
