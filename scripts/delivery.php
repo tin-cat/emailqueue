@@ -40,7 +40,7 @@
 		global $devel_emails;
 		if (is_array($devel_emails)) {
 			foreach ($devel_emails as $email)
-				$develEmailsSqlArray[] = "to = '".$email."'";
+				$develEmailsSqlArray[] = "emails.to = '".$email."'";
 			$develEmailsWhere = " and (".implode(" or ", $develEmailsSqlArray).")";
 		}
 	}
