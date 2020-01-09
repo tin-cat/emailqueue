@@ -2,7 +2,7 @@
 
 	/*
 		EMailqueue
-		Purge
+		Flush
 	*/
 	
 	include_once dirname(__FILE__)."/../common.inc.php";
@@ -10,8 +10,8 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo "Emailqueue · Purge\n";	
-	echo "Purge messages older than ".PURGE_OLDER_THAN_DAYS." days.\n";
+	echo "Emailqueue · Flush\n";	
+	echo "Removes all emails from the queue.\n";
 	echo "Process started on: ".date("j/n/Y H:i.s")."\n";
 	
 	$db->query("
@@ -19,19 +19,12 @@
 			id
 		from
 			emails
-		where (
-				is_sent = 1
-			or
-				is_cancelled = 1
-		)
-		and
+		where
 			is_sendingnow = 0
-		and
-			date_injected <= '".date("Y-n-j H:i:s", time()-(PURGE_OLDER_THAN_DAYS*24*60*60))."'
 	");
 	
 	if (!$db->isanyresult()) {
-		echo "No emails to purge.\n";
+		echo "No emails to flush.\n";
 	}
 	else {
 		$count = 0;
@@ -39,7 +32,7 @@
 			$email_ids[] = $row["id"];
 			$count ++;
 		}        
-		echo $count." emails to be purged.\n";
+		echo $count." emails to be flushed.\n";
 		
 		$count = 0;
 		foreach ($email_ids as $email_id) {
