@@ -24,8 +24,8 @@
 	if ($q["message"] && $q["messages"])
 		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 
-	if ($message)
-		$messages[] = $message;
+	if ($q["message"])
+		$q["messages"][] = $q["message"];
 	
 	foreach ($messages as $message) {
 		if (!$message["from"])
