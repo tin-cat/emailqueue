@@ -30,11 +30,11 @@
 		$q["messages"][] = $q["message"];
 	
 	foreach ($q["messages"] as $message) {
-		if (!$message["from"])
+		if (!isset($message["from"]))
 			apiResult(false, "Key \"from\" is required");
-		if (!$message["to"])
+		if (!isset($message["to"]))
 			apiResult(false, "Key \"to\" is required");
-		if (!$message["subject"])
+		if (!isset($message["subject"]))
 			apiResult(false, "Key \"subject\" is required");
 		
 		try {

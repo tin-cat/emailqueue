@@ -75,35 +75,33 @@
 			foreach ($parameters as $key => $parameter) {
                 if (isset($parameter["default"]) && !isset($p[$key]))
                     $p[$key] = $parameter["default"];
-                if (isset($p[$key]))
-                    $$key = $p[$key];
             }
 
             $this->db_connect();
 
-            if ($is_send_now)
-                $is_immediate = true;
+            if ($p["is_send_now"])
+                $p["is_immediate"] = true;
         
-            $subject = str_replace("\\'", "'", $subject);
-            $subject = str_replace("'", "\'", $subject);
+            $p["subject"] = str_replace("\\'", "'", $p["subject"]);
+            $p["subject"] = str_replace("'", "\'", $p["subject"]);
 
             // Some recommendations have been found about not sending emails longer than 63k bytes, it seems that triggers lots of spam-detection alarms.
-            if(strlen($content) > 63000)
-                $content = substr($content, 0, 63000);
+            if(strlen($p["content"]) > 63000)
+                $p["content"] = substr($p["content"], 0, 63000);
             
-            $content = str_replace("\\'", "'", $content);
-            $content = str_replace("'", "\'", $content);
+            $p["content"] = str_replace("\\'", "'", $p["content"]);
+            $p["content"] = str_replace("'", "\'", $p["content"]);
             
-            $content_nonhtml = str_replace("\\'", "'", $content_nonhtml);
-            $content_nonhtml = str_replace("'", "\'", $content_nonhtml);
+            $p["content_nonhtml"] = str_replace("\\'", "'", $p["content_nonhtml"]);
+            $p["content_nonhtml"] = str_replace("'", "\'", $p["content_nonhtml"]);
 
             // Prepare and check attachments array
-            if ($attachments) {
-                if (!is_array($attachments)) {
+            if ($p["attachments"]) {
+                if (!is_array($p["attachments"])) {
                     $this->error("Attachments parameter must be an array.");
                     return false;
                 }
-                foreach ($attachments as $attachment) {
+                foreach ($p["attachments"] as $attachment) {
                     if (!is_array($attachment)) {
                         $this->error("Each attachment specified on the attachments array must be a hash array.");
                         return false;
@@ -115,8 +113,8 @@
                 }
             }
 
-            if ($custom_headers) {
-                if (!is_array($custom_headers)) {
+            if ($p["custom_headers"]) {
+                if (!is_array($p["custom_headers"])) {
                     $this->error("Custom headers parameter must be an array.");
                     return false;
                 }
@@ -156,10 +154,10 @@
 					)
 					values
 					(
-						".($foreign_id_a ? $foreign_id_a : "null").",
-						".($foreign_id_b ? $foreign_id_b : "null").",
-						".($priority ? $priority : $this->default_priority).",
-						".($is_immediate ? "1" : "0").",
+						".($p["foreign_id_a"] ? $p["foreign_id_a"] : "null").",
+						".($p["foreign_id_b"] ? $p["foreign_id_b"] : "null").",
+						".($p["priority"] ? $p["priority"] : $this->default_priority).",
+						".($p["is_immediate"] ? "1" : "0").",
 						0,
 						0,
 						0,
@@ -167,21 +165,21 @@
 						0,
 						0,
 						'".date("Y-n-j H:i:s", $this->timestamp_adjust(time(), $this->emailqueue_timezone))."',
-						".($date_queued ? "'".date("Y-n-j H:i:s", $this->timestamp_adjust($date_queued, $this->emailqueue_timezone))."'" : "null").",
+						".($p["date_queued"] ? "'".date("Y-n-j H:i:s", $this->timestamp_adjust($p["date_queued"], $this->emailqueue_timezone))."'" : "null").",
 						null,
-						".($is_html ? "1" : "0").",
-						".($from ? "'".$from."'" : "null").",
-						".($from_name ? "'".$from_name."'" : "null").",
-						".($to ? "'".$to."'" : "null").",
-						".($replyto ? "'".$replyto."'" : "null").",
-						".($replyto_name ? "'".$replyto_name."'" : "null").",
-						'".$subject."',
-						'".$content."',
-						'".$content_nonhtml."',
-						'".$list_unsubscribe_url."',
-                        ".($attachments ? "'".serialize($attachments)."'" : "null").",
-                        ".($is_embed_images ? "1" : "0").",
-                        ".($custom_headers ? "'".serialize($custom_headers)."'" : "null")."
+						".($p["is_html"] ? "1" : "0").",
+						".($p["from"] ? "'".$p["from"]."'" : "null").",
+						".($p["from_name"] ? "'".$p["from_name"]."'" : "null").",
+						".($p["to"] ? "'".$p["to"]."'" : "null").",
+						".($p["replyto"] ? "'".$p["replyto"]."'" : "null").",
+						".($p["replyto_name"] ? "'".$p["replyto_name"]."'" : "null").",
+						'".$p["subject"]."',
+						'".$p["content"]."',
+						'".$p["content_nonhtml"]."',
+						'".$p["list_unsubscribe_url"]."',
+                        ".($p["attachments"] ? "'".serialize($p["attachments"])."'" : "null").",
+                        ".($p["is_embed_images"] ? "1" : "0").",
+                        ".($p["custom_headers"] ? "'".serialize($p["custom_headers"])."'" : "null")."
 					)
 				"
 			);
@@ -191,7 +189,7 @@
                 die;
 			}
             
-            if ($is_send_now) {
+            if ($p["is_send_now"]{
                 $email_id = mysqli_insert_id($this->connectionid);
                 if (!$result = mysqli_query($this->connectionid, "select * from emails where id = ".$email_id)) {
                     $this->error("Couldn't retrieve the recently inserted email for 'send now' delivery.");
