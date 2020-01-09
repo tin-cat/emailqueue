@@ -230,10 +230,4 @@ Emailqueue was built in the early 2000s, and there are many (_many_!) amateur de
 Do not use Emailqueue to send unsolicited email, or emails about animal abuse.
 
 # License #
-Emailqueue is released under the GNU GPL v2.0 (See LICENSE file). Emailqueue includes PHPMailer (https://github.com/Synchro/PHPMailer), which is also licensed under GNU GPL v2.0
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+Emailqueue is released under the MIT License (See LICENSE file). Emailqueue uses the library PHPMailer (https://github.com/Synchro/PHPMailer), which licensed under GNU GPL v2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html) As per GNU GPL v2.1 Term number 5: [...] "A program that contains no derivative of any portion of the Library, but is designed to work with the Library by being compiled or linked with it, is called a "work that uses the Library". Such a work, in isolation, is not a derivative work of the Library, and therefore falls outside the scope of this License." [...], Emailqueue is not required to be released under a GNU GPL License.
