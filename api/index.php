@@ -5,8 +5,6 @@
 		API
 	*/
 
-	namespace Emailqueue;
-
     include_once dirname(__FILE__)."/../config/application.config.inc.php"; // Include emailqueue configuration.
     include_once dirname(__FILE__)."/../config/db.config.inc.php"; // Include Emailqueue's database connection configuration.
     include_once dirname(__FILE__)."/../scripts/emailqueue_inject.class.php"; // Include Emailqueue's emailqueue_inject class.
