@@ -22,7 +22,7 @@
 	if ($message && $messages)
 		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 	
-	$message = json_decode($utils->getglobal("message"))
+	$message = json_decode($utils->getglobal("message"));
 	if (is_null($message))
 		apiResult(false, "Can't decode passed message Json");
 
