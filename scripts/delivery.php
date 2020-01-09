@@ -35,6 +35,16 @@
 
 	$now = time();
 
+	// If we're in the devel environment, get only emails addressed to the recipients listed on $devel_emails
+	if (IS_DEVEL_ENVIRONMENT) {
+		global $devel_emails;
+		if (is_array($devel_emails)) {
+			foreach ($devel_emails as $email)
+				$develEmailsSqlArray[] = "to = '".$email."'";
+			$develEmailsWhere = " and (".implode(" or ", $develEmailsSqlArray).")";
+		}
+	}
+
     // Query emails to be sent
 	$db->query("
 		select
@@ -52,6 +62,7 @@
 			or
 			(date_queued is not null and date_queued <= '".date("Y-n-j H:i:s", $now)."')
 		)
+		".($develEmailsWhere ? $develEmailsWhere : null).
 		order by
 			is_immediate desc,
 			priority asc,
