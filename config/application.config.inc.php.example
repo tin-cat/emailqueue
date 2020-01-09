@@ -2,10 +2,10 @@
 
 	namespace Emailqueue;
 
-	define("API_KEY", ""); // The secret key to access Emailqueue via API
+	define("API_KEY", "asfKkj3=m2345k");  // The secret key to access Emailqueue via API. Change it to a random string of your choice.
 
-	define("FRONTEND_USER", "user"); // The user name for the frontend
-	define("FRONTEND_PASSWORD", "password"); // The password for the frontend
+	define("FRONTEND_USER", "user"); // The user name for the frontend. Change it to your desired user.
+	define("FRONTEND_PASSWORD", "password"); // The password for the frontend. Change it to a strong password of your choice.
 
 	define("QUEUED_MESSAGES", 40); // Number of last queued messages to show in frontend
 	define("LATEST_DELIVERED_MESSAGES", 10); // Number of last delivered messages to show in frontend
