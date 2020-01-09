@@ -18,7 +18,7 @@
 
 	if ($q["key"] != API_KEY) {
 		sleep(rand(1, 3));
-		apiResult(false, "Wrong API key");
+		apiResult(false, "Wrong API key ".$q["key"]." != ".API_KEY);
 	}
 	
 	if ($q["message"] && $q["messages"])
