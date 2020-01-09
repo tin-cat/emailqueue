@@ -9,7 +9,9 @@
 	
 	include_once dirname(__FILE__)."/../common.inc.php";
 	
-	$q = $utils->getglobal("q");
+	$q = json_decode($utils->getglobal("q"));
+	if (is_null($q))
+		apiResult(false, "Can't decode query");
 
 	if (!$q["key"] || $q["key"] == "")
 		apiResult(false, "No API key passed");
@@ -19,15 +21,7 @@
 		apiResult(false, "Wrong API key");
 	}
 	
-	$message = json_decode($q["message"]);
-	if (is_null($message))
-		apiResult(false, "Can't decode passed message Json");
-
-	$messages = json_decode($q["messages"]);
-	if (is_null($messages))
-		apiResult(false, "Can't decode passed messages Json");
-	
-	if ($message && $messages)
+	if ($q["message"] && $q["messages"])
 		apiResult(false, "Both message and messages have been passed, please pass only one of them");
 
 	if ($message)
