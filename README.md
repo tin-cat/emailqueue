@@ -150,7 +150,7 @@ Call your endpoint by making an HTTP request with the a parameter called ***q***
 
 An example value for the ***q*** POST parameter to inject a single email would be:
 
-`
+```
 	{
 		"key":"your_api_key",
 		"message": {
@@ -160,14 +160,14 @@ An example value for the ***q*** POST parameter to inject a single email would b
 			"content":"This is just an email to test Emailqueue"
 		}
 	}
-`
+```
 
 To inject multiple messages in a single API call, use the key "messages" instead of "message":
   * messages: An array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
 
 An example value for the ***q*** POST parameter to inject multiple emails would be:
 
-`
+```
 	{
 		"key":"your_api_key",
 		"messages": {
@@ -185,7 +185,7 @@ An example value for the ***q*** POST parameter to inject multiple emails would 
 			}
 		}
 	}
-`
+```
 
 The API will respond with a Json object containing the following keys:
 
