@@ -142,43 +142,49 @@ Use this method when you're running Emailqueue in an isolated server or in a doc
 The API endpoint URL would be like: https://<domain or IP>/<the route you defined on your webserver>
 Example of an API endpoint: https://192.168.1.100/emailqueue
 
-Call your endpoint by making an HTTP request with the following POST parameters:
+Call your endpoint by making an HTTP request with the a parameter called ***q*** containing a JSon with the following keys:
 
 * key: The API_KEY as defined in your application.config.inc.php
-* message: A Json containing an array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
+* message: An array defining the email message you want to inject, with the keys as defined in the "Emailqueue injection keys" section of this document.
   * Unfortunately, you cannot yet attach images when calling Emailqueue via API, so the "attachments" and "is_embed_images" keys won't have any affect when calling the API.
 
-An example value for the message POST parameter would be:
+An example value for the ***q*** POST parameter to inject a single email would be:
 
 `
 	{
-		"from":"me@domain.com",
-		"to":"him@domain.com",
-		"subject":"Just testing",
-		"content":"This is just an email to test Emailqueue"
-	}
-`
-
-To inject multiple messages in a single API call, use the POST parameter "messages" instead of "message":
-  * messages: A Json containing an array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
-
-An example value for the messages POST parameter would be:
-
-`
-	[
-		{
+		"key":"your_api_key",
+		"message": {
 			"from":"me@domain.com",
 			"to":"him@domain.com",
 			"subject":"Just testing",
 			"content":"This is just an email to test Emailqueue"
-		},
-		{
-			"from":"me@domain.com",
-			"to":"him@domain.com",
-			"subject":"Testing again",
-			"content":"This is another test"
 		}
-	]
+	}
+`
+
+To inject multiple messages in a single API call, use the key "messages" instead of "message":
+  * messages: An array of arrays defining the email messages, where each array defining the email message has the keys as defined in the "Emailqueue injection keys" section of this document.
+
+An example value for the ***q*** POST parameter to inject multiple emails would be:
+
+`
+	{
+		"key":"your_api_key",
+		"messages": {
+			{
+				"from":"me@domain.com",
+				"to":"him@domain.com",
+				"subject":"Just testing",
+				"content":"This is just an email to test Emailqueue"
+			},
+			{
+				"from":"me@domain.com",
+				"to":"him@domain.com",
+				"subject":"Testing again",
+				"content":"This is another test"
+			}
+		}
+	}
 `
 
 The API will respond with a Json object containing the following keys:
