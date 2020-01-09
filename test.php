@@ -5,7 +5,10 @@
 <hr>
 <?php
 
-	if (!$action = $_POST["action"])
+	if (isset($_POST["action"]))
+		$action = $_POST["action"];
+
+	if (!$action)
 		$action = "form";
 
 	switch ($action) {
