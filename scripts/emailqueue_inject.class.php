@@ -56,7 +56,7 @@
                 "priority" => ["default" => 10],
                 "is_immediate" => ["default" => true],
                 "date_queued"=> [],
-                "is_html"=> [],
+                "is_html"=> ["default" => true],
                 "from"=> [],
                 "from_name"=> [],
                 "to"=> [],

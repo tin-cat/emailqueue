@@ -40,7 +40,7 @@ There is an official docker compose project for Emailqueue that will get you a r
   
 * **Version 3.2**
   * Switched to MIT license, now Emailqueue can be used in commercial, non GNU-GPL projects.
-  * emailqueue_inject::inject method is now called differently, see the "How to use" section or example.php for for info.
+  * emailqueue_inject::inject method is now called differently, see the "How to use" section or example_local.php for for info.
   * "is_send_now" emailqueue_inject::inject parameter sends the email without waiting for the next queue processing event, perfect for those cases where you can't even wait a minute to have your email delivered.
   * Now uses composer for library dependencies.
   * Using standard <?php instead of the shorthand <? version for improved compatibility.
@@ -105,7 +105,7 @@ There is an official docker compose project for Emailqueue that will get you a r
 * You should be ready to go, now you can:
 
     * See the status of the queue by accessing /emailqueue/frontend in your browser.
-    * Send emails using the provided emailqueue_inject PHP class found in scripts/emailqueue_inject.class.php. See an example on how to use this class in example.php
+    * Send emails using the provided emailqueue_inject PHP class found in scripts/emailqueue_inject.class.php. See an example on how to use this class in example_local.php
     * You can also inject messages to the queue by manually inserting them on the database via SQL (Insert in the "emails" table, read the field comments for detailed explanations)
 
 # Migrate from Version 3.2 to Version 3.3 #
@@ -122,7 +122,9 @@ There is an official docker compose project for Emailqueue that will get you a r
 If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, using your database manager, select your emailqueue database and run the install/migrate_from_versions_older_than_v3.1.sql SQL file.
 
 # How to use if Emailqueue is on the same server as your code #
-The file example.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class, which is the recommended method. Here's what to do, anyway:
+The file example_local.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class. Use this method of injecting emails when Emailqueue is installed in the same server as your code, and Emailqueue configuration files and the emailqueue_inject.class.php class file is accessible by your code.
+
+Here's what to do:
 
 * Include the following files (specify your path as needed):
     * config/application.config.inc.php
@@ -135,7 +137,7 @@ The file example.php is a thoroughly documented example on how to send an email 
 * Send an email by calling the inject method of the emailqueue_inject object, passing a hash array with the keys as defined in the "Emailqueue injection keys" section of this document.
 
 # How to use via API calls #
-If you're running Emailqueue in an isolated server, or in a dockerized environment like the official Emailqueue docker compose project (https://github.com/tin-cat/emailqueue-docker), you should add emails to Emailqueue by calling the Emailqueue API via a standard HTTP request.
+Use this method when you're running Emailqueue in an isolated server or in a dockerized environment like the official Emailqueue docker compose project (https://github.com/tin-cat/emailqueue-docker): Add emails to Emailqueue by calling the Emailqueue API via a standard HTTP request.
 
 The API endpoint URL would be like: https://<domain or IP>/<the route you defined on your webserver>
 Example of an API endpoint: https://192.168.1.100/emailqueue
@@ -189,11 +191,11 @@ Whenever you inject an email using the emailqueue_inject class, calling the API 
 
   * **foreign_id_a**: Optional, an id number for your internal records. e.g. Your internal id of the user who has sent this email.
   * **foreign_id_b**: Optional, a secondary id number for your internal records.
-  * **priority**: The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before.
-  * **is_immediate**: Set it to true to queue this email to be delivered as soon as possible. (doesn't overrides priority setting)
-  * **is_send_now**: Set it to true to make this email be sent right now, without waiting for the next delivery call. This effectively gets rid of the queueing capabilities of emailqueue and can delay the execution of your script a little while the SMTP connection is done. Use it in those cases where you don't want your users to wait not even a minute to receive your message.
-  * **date_queued**: If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting)
-  * **is_html**: Whether the given "content" parameter contains HTML or not.
+  * **priority**: The priority of this email in relation to others: The lower the priority, the sooner it will be sent. e.g. An email with priority 10 will be sent first even if one thousand emails with priority 11 have been injected before. Defaults to 10.
+  * **is_immediate**: Set it to true to queue this email to be delivered as soon as possible. (doesn't overrides priority setting) Defaults to true.
+  * **is_send_now**: Set it to true to make this email be sent right now, without waiting for the next delivery call. This effectively gets rid of the queueing capabilities of emailqueue and can delay the execution of your script a little while the SMTP connection is done. Use it in those cases where you don't want your users to wait not even a minute to receive your message. Defaults to false.
+  * **date_queued**: If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting).
+  * **is_html**: Whether the given "content" parameter contains HTML or not. Defaults to true.
   * **from**: The sender email address
   * **from_name**: The sender name
   * **to**: The addressee email address
@@ -203,8 +205,9 @@ Whenever you inject an email using the emailqueue_inject class, calling the API 
   * **content**: The email content. Can contain HTML (set is_html parameter to true if so).
   * **content_nonhtml**: The plain text-only content for clients not supporting HTML emails (quite rare nowadays). If set to false, a text-only version of the given content will be automatically generated.
   * **list_unsubscribe_url**: Optional. Specify the URL where users can unsubscribe from your mailing list. Some email clients will show this URL as an option to the user, and it's likely to be considered by many SPAM filters as a good signal, so it's really recommended.
-  * **attachments**: Optional. An array of hash arrays specifying the files you want to attach to your email. See example.php for an specific description on how to build this array.
+  * **attachments**: Optional. An array of hash arrays specifying the files you want to attach to your email. See example_local.php for an specific description on how to build this array.
   * **is_embed_images**: When set to true, Emailqueue will find all the <img ... /> tags in your provided HTML code on the "content" parameter and convert them into embedded images that are attached to the email itself instead of being referenced by URL. This might cause email clients to show the email straightaway without the user having to accept manually to load the images. Setting this option to true will greatly increase the bandwidth usage of your SMTP server, since each message will contain hard copies of all embedded messages. 10k emails with 300Kbs worth of images each means around 3Gb. of data to be transferred!
+  * **custom_headers**: Optional. A hash array of additional headers where each key is the header name and each value is its value.
 
 # Hints #
 * Here's a neat trick: Attach a .vcf card to your emails so users can add you to their contacts lists with just a few clicks: Many email clients will trust you if your "from" email address is on the user's contacts list, improving dramatically the inbox placement.
