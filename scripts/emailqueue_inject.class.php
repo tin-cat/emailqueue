@@ -74,7 +74,7 @@
 			foreach ($parameters as $key => $parameter) {
                 if (isset($parameter["default"]) && !isset($p[$key]))
                     $p[$key] = $parameter["default"];
-                if ($p[$key])
+                if (isset($p[$key]))
                     $$key = $p[$key];
             }
 
