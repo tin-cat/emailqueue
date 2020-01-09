@@ -26,7 +26,7 @@
 	if (is_null($message))
 		apiResult(false, "Can't decode passed message Json");
 
-	$messages = json_decode$utils->getglobal("messages"));
+	$messages = json_decode($utils->getglobal("messages"));
 	if (is_null($messages))
 		apiResult(false, "Can't decode passed messages Json");
 
