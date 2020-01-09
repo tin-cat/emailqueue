@@ -10,24 +10,24 @@
 		"http://127.0.0.1/api/",
 		"asfKkj3=m2345k",
 		[
-			"from" => "me@domain.com",
-			"to" => "him@domain.com",
-			"subject" => "Just testing",
-			"content" => "This is just an email to test Emailqueue"
+			[
+				"from" => "me@domain.com",
+				"to" => "him@domain.com",
+				"subject" => "Just testing",
+				"content" => "This is just an email to test Emailqueue"
+			]
 		]
 	);
 
 	echo "<b>Api call result:</b><br><pre>".print_r($result, true)."</pre>";
 
-    function emailqueueApiCall($endpoint, $key, $message = false) {
+    function emailqueueApiCall($endpoint, $key, $messages = false) {
 		$curl = curl_init();
 
-		$request = ["key" => $key];
-
-		if (is_array($message))
-			$request["messages"] = $message;
-		else
-			$request["message"] = $message;
+		$request = [
+			"key" => $key,
+			"messages" => $messages
+		];
 
 		curl_setopt($curl, CURLOPT_URL, $endpoint);
 		curl_setopt($curl, CURLOPT_POST, 1);
