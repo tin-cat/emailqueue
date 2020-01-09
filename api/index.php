@@ -45,10 +45,10 @@
 	$db->disconnect();
 
 	function apiResult($isOk, $description = false) {
-		echo json_encode({
+		echo json_encode([
 			"result" => $isOk,
 			"description" => $description
-		});
+		]);
 		die;
 	}
 
