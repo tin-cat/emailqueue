@@ -1,3 +1,3 @@
 #! /bin/sh
 BASEDIR=$(dirname $0)
-php -q ${BASEDIR}/pause.php
+/usr/local/bin/php -q ${BASEDIR}/pause.php
