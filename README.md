@@ -22,7 +22,7 @@ This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP
 * Inject any number of emails super-fast and inmediately free your app to do other things. Let Emailqueue do the job in the background.
 * Prioritize emails: Specify a priority when injecting an email and it will be sent before any other queued emails with lower priorities. E.g: You can inject 100k emails for a newsletter with priority 10 (they will take a while to be sent), and still inject an important email (like a password reminder message) with priority 1 to be sent ASAP even before the huge newsletter has been sent.
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
-* The code is quite naive, built in the early 2000s. But boy, it's been tested! This means it will be very easy for you if you decide to branch/fork it and improve it. Emailqueue is a funny grown old man.
+* The code base is quite old, with its roots in the early 2000s. Boy, it's been tested! Emailqueue is a funny, reliable grown old man.
 
 
 # Docker version #
