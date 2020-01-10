@@ -83,6 +83,8 @@
 		deliver_emails($mail, $emails, true);
 		$mail->SmtpClose();
 	}
+
+	echo "\n";
 	
 	$db->disconnect();
 
