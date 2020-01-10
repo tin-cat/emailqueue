@@ -1,4 +1,4 @@
 #! /bin/sh
-PHPBINARY=$(which php)
-BASEDIR=$(dirname $0)
-${PHPBINARY} -q ${BASEDIR}/unpause.php
+PHPBINARY=`which php`
+BASEDIR=`dirname $0`
+$PHPBINARY -q ${BASEDIR}/unpause.php
