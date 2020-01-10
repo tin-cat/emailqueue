@@ -10,9 +10,7 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo "Emailqueue · Flush\n";	
-	echo "Removes all emails from the queue.\n";
-	echo "Process started on: ".date("j/n/Y H:i.s")."\n";
+	echo date("j/n/Y H:i.s")." Emailqueue:Flush";
 	
 	$db->query("
 		select
@@ -24,15 +22,14 @@
 	");
 	
 	if (!$db->isanyresult()) {
-		echo "No emails to flush.\n";
+		echo " [No emails to flush]\n";
 	}
 	else {
 		$count = 0;
 		while ($row = $db->fetchrow()) {
 			$email_ids[] = $row["id"];
 			$count ++;
-		}        
-		echo $count." emails to be flushed.\n";
+		}
 		
 		$count = 0;
 		foreach ($email_ids as $email_id) {
@@ -40,10 +37,8 @@
 			$db->query("delete from incidences where email_id = ".$email_id);
 			$count ++;
 		}
-		echo $count." emails and related incidences purged.\n";
+		echo " [".$count." emails purged]\n";
 	}
-	
-	echo "Process ended on: ".date("j/n/Y H:i.s")."\n";
 	
 	$db->disconnect();
 

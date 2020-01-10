@@ -12,18 +12,17 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo date("j/n/Y H:i.s");
-	echo " Emailqueue:Delivery";
+	echo date("j/n/Y H:i.s")." Emailqueue:Delivery";
     if (IS_DEVEL_ENVIRONMENT) {
         echo " [Devel";
         if (!$devel_emails)
-            echo " [no devel emails]";
+            echo " / No devel emails";
         else
-            echo " [".sizeof($devel_emails)." devel emails]";
+            echo " / ".sizeof($devel_emails)." devel emails]";
     }
 
 	if (isFlag("paused")) {
-		echo " [Paused, not sending]";
+		echo " [Paused / Not sending]";
 		$db->disconnect();
 		die;
 	}

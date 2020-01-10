@@ -12,18 +12,17 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo "Emailqueue · Pause\n";	
-	echo "Pauses email delivery.\n";
+	echo date("j/n/Y H:i.s")." Emailqueue:Pause";
 
 	if (isFlag("paused")) {
-		echo "Already paused.\n";
+		echo " [Already paused]\n";
 		die;
 	}
 	
 	if (!setFlag("paused"))
 		die;
 	
-	echo "Done. No emails will be delivered from now on.\n";
+	echo " [Paused]\n";
 
 	$db->disconnect();
 

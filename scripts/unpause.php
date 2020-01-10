@@ -12,18 +12,17 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo "Emailqueue · Unpause\n";	
-	echo "Unpauses email delivery.\n";
+	echo date("j/n/Y H:i.s")." Emailqueue:Unpause";
 
 	if (!isFlag("paused")) {
-		echo "Not paused.\n";
+		echo " [Not paused]\n";
 		die;
 	}
 	
 	if (!unsetFlag("paused"))
 		die;
 	
-	echo "Done. Emails will be delivered from now on.\n";
+	echo " [Done]\n";
 
 	$db->disconnect();
 

@@ -183,14 +183,14 @@
 
 		if ($isOutputVerbose) {
 			flush();
-			echo " [✉️".$email["id"]." ".$email["to"];
+			echo " [✉️ ".$email["id"]." / ".$email["to"];
 		}
 		
 		setsendingnow($email["id"]);
 		
 		if ($email["is_sendingnow"]) {
 			if ($isOutputVerbose)
-				echo " Already being sent.";
+				echo " / Already being sent.";
 			add_incidence($email["id"], "Try to send an email that is already being sent");
 			$logger->add_log_incidence(
 				array
@@ -204,7 +204,7 @@
 		}
 		
 		if (!checkemail($email["to"])) {
-			echo " Bad recipient.";
+			echo " / Bad recipient.";
 			add_incidence($email["id"], "Incorrect recipient email address: ".$email["to"]);
 			cancel($email["id"]);
 			$logger->add_log_incidence(
@@ -219,7 +219,7 @@
 		
 		if (!checkemail($email["from"])) {
 			if ($isOutputVerbose)
-				echo " Bad sender.";
+				echo " / Bad sender.";
 			add_incidence($email["id"], "Incorrect sender email address: ".$email["from"]);
 			cancel($email["id"]);
 			$logger->add_log_incidence
@@ -238,7 +238,7 @@
 		if (isset($blacklisted_emails))
 			if (is_array($blacklisted_emails) and in_array(strtolower(trim($email["to"])), $blacklisted_emails)) {
 				if ($isOutputVerbose)
-					echo " Black listed.";
+					echo " / Black listed.";
 				add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
 				cancel($email["id"]);
 				$logger->add_log_incidence(
@@ -370,7 +370,7 @@
 			if ($isError) {
 
 				if ($isOutputVerbose)
-					echo " Error (".$errorText.")";
+					echo " / Error ".$errorText;
 				
 				if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
 					update_error_count($email["id"], $email["error_count"]+1);
@@ -386,7 +386,7 @@
 						)
 					);
 					if ($isOutputVerbose)
-						echo " No more attempts.";
+						echo " / No more attempts.";
 				}
 				else {
 					update_error_count($email["id"], $email["error_count"]+1);
@@ -399,7 +399,7 @@
 						$incidence_text
 					));
 					if ($isOutputVerbose)
-						echo " Scheduled for one more try.";
+						echo " / Scheduled for one more try.";
 				}
 
 			} else {
@@ -415,7 +415,7 @@
 					$email["subject"]
 				));
 				if ($isOutputVerbose)
-					echo " Email processed.";
+					echo " / Processed";
 				
 				// Sleeping
 				usleep((DELIVERY_INTERVAL/100));
@@ -424,7 +424,7 @@
 
 		} else
 			if ($isOutputVerbose)
-				echo " Not devel allowed recipient.";
+				echo " / Not devel allowed recipient";
 				
 		
 		if ($isOutputVerbose)
