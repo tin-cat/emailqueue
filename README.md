@@ -33,6 +33,9 @@ There is an official docker compose project for Emailqueue that will get you a r
 * **Version 3.4**
   * Created the official docker compose project for Emailqueue (https://github.com/tin-cat/emailqueue-docker) that allows you to deploy a working emailqueue setup very easily.
   * Added a simple HTTP API to queue emails, useful when running Emailqueue in an isolated server, or as a docker service.
+  * Now supports pausing and unpausing.
+  * Better scripts.
+  * Minor bugs tamed.
 
 * **Version 3.3**
   * Support for Emoji.
