@@ -1,4 +1,3 @@
-#!/bin/bash
-PHPBINARY="`which php` -q"
-BASEDIR=`dirname $0`
-$PHPBINARY ${BASEDIR}/delivery.php
+#!/bin/sh
+BASEDIR=$(dirname $0)
+$(which php) -q ${BASEDIR}/delivery.php
