@@ -154,7 +154,7 @@
 			// Check if maximum delivery timeout have been reached
 			if ((time() - $timecontrol_start) > MAXIMUM_DELIVERY_TIMEOUT) {
 				if ($isOutputVerbose) {
-                	echo "Delivery proccess automatically stopped before it finished because of too many time spent on delivering. Time spent: ".(time() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds\n"; 
+                	echo " [Reached maximum delivery timeout]"; 
 				}
                 $logger->add_log_incidence(
                     array(
@@ -183,14 +183,14 @@
 
 		if ($isOutputVerbose) {
 			flush();
-			echo $email["id"].": Sending email to ".$email["to"]." ... ";
+			echo " [✉️".$email["id"]." ".$email["to"];
 		}
 		
 		setsendingnow($email["id"]);
 		
 		if ($email["is_sendingnow"]) {
 			if ($isOutputVerbose)
-				echo "already being sent.";
+				echo " Already being sent.";
 			add_incidence($email["id"], "Try to send an email that is already being sent");
 			$logger->add_log_incidence(
 				array
@@ -204,7 +204,7 @@
 		}
 		
 		if (!checkemail($email["to"])) {
-			echo "bad recipient email address.";
+			echo " Bad recipient.";
 			add_incidence($email["id"], "Incorrect recipient email address: ".$email["to"]);
 			cancel($email["id"]);
 			$logger->add_log_incidence(
@@ -219,17 +219,17 @@
 		
 		if (!checkemail($email["from"])) {
 			if ($isOutputVerbose)
-				echo "bad addressee email address.";
-			add_incidence($email["id"], "Incorrect addressee email address: ".$email["from"]);
+				echo " Bad sender.";
+			add_incidence($email["id"], "Incorrect sender email address: ".$email["from"]);
 			cancel($email["id"]);
 			$logger->add_log_incidence
 			(
 				array
 				(
 					$email["id"],
-					$email["to"],
+					$email["from"],
 					"Email cancelled",
-					"Incorrect addressee email address"
+					"Incorrect sender email address"
 				)
 			);
 		}
@@ -238,7 +238,7 @@
 		if (isset($blacklisted_emails))
 			if (is_array($blacklisted_emails) and in_array(strtolower(trim($email["to"])), $blacklisted_emails)) {
 				if ($isOutputVerbose)
-					echo "recipient is on the black list.";
+					echo " Black listed.";
 				add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
 				cancel($email["id"]);
 				$logger->add_log_incidence(
@@ -304,7 +304,7 @@
 
 				if($email["is_html"]) {
 					$mail->IsHTML(true);
-						$mail->AltBody = "Please use an HTML compatible email viewer!";
+						$mail->AltBody = "Please use an HTML compatible email viewer";
 						$mail->MsgHTML($body);
 					} else {
 						$mail->Body = $body;
@@ -370,7 +370,7 @@
 			if ($isError) {
 
 				if ($isOutputVerbose)
-					echo "Error while sending email: ".$errorText.", ";
+					echo " Error (".$errorText.")";
 				
 				if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
 					update_error_count($email["id"], $email["error_count"]+1);
@@ -386,7 +386,7 @@
 						)
 					);
 					if ($isOutputVerbose)
-						echo "No more attempts allowed, cancelled";
+						echo " No more attempts.";
 				}
 				else {
 					update_error_count($email["id"], $email["error_count"]+1);
@@ -399,7 +399,7 @@
 						$incidence_text
 					));
 					if ($isOutputVerbose)
-						echo "Scheduled for one more try";
+						echo " Scheduled for one more try.";
 				}
 
 			} else {
@@ -415,7 +415,7 @@
 					$email["subject"]
 				));
 				if ($isOutputVerbose)
-					echo "Email processed";
+					echo " Email processed.";
 				
 				// Sleeping
 				usleep((DELIVERY_INTERVAL/100));
@@ -424,11 +424,11 @@
 
 		} else
 			if ($isOutputVerbose)
-				echo "Running in devel environment, the recipient email isn't on the allowed devel emails. ";
+				echo " Not devel allowed recipient.";
 				
 		
 		if ($isOutputVerbose)
-			echo "\n";
+			echo "]\n";
 		
 		unsetsendingnow($email["id"]);
 	}

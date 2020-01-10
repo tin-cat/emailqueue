@@ -12,21 +12,18 @@
 	header("content-type: text/plain");
 	set_time_limit(0);
 	
-	echo "Emailqueue · Delivery\n";
+	echo date("j/n/Y H:i.s");
+	echo " Emailqueue:Delivery";
     if (IS_DEVEL_ENVIRONMENT) {
-        echo "Reminder: Running in development environment, ";
+        echo " [Devel";
         if (!$devel_emails)
-            echo "no emails will be sent.\n";
+            echo " [no devel emails]";
         else
-            echo "only emails to ".implode(", ", $devel_emails)." will be sent.\n";
+            echo " [".sizeof($devel_emails)." devel emails]";
     }
-	echo "Maximum delivery timeout: ".(MAXIMUM_DELIVERY_TIMEOUT ? $utils->secondstohumantime(MAXIMUM_DELIVERY_TIMEOUT) : "unlimited")."\n";
-	echo "Delivery interval: ".(DELIVERY_INTERVAL ? number_format((DELIVERY_INTERVAL/100), 2, ",", "")." seconds" : "none")."\n";
-	echo "Maximum emails to deliver: ".(MAX_DELIVERS_A_TIME ? MAX_DELIVERS_A_TIME : "no limit")."\n";
-	echo "Process started on: ".date("j/n/Y H:i.s")."\n";
 
 	if (isFlag("paused")) {
-		echo "Emailqueue is paused, not delivering any emails.\n";
+		echo " [Paused, not sending]";
 		$db->disconnect();
 		die;
 	}
@@ -77,7 +74,7 @@
 	");
 	
 	if (!$db->isanyresult()) {
-		echo "No emails on queue.\n";
+		echo " [Empty queue]";
 	}
 	else {
 		while ($row = $db->fetchrow())
@@ -87,8 +84,6 @@
 		deliver_emails($mail, $emails, true);
 		$mail->SmtpClose();
 	}
-	
-	echo "Process ended on: ".date("j/n/Y H:i.s")."\n";
 	
 	$db->disconnect();
 
