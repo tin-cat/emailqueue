@@ -428,7 +428,7 @@
 				
 		
 		if ($isOutputVerbose)
-			echo "]\n";
+			echo "]";
 		
 		unsetsendingnow($email["id"]);
 	}
