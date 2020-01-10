@@ -7,18 +7,19 @@ Almost anyone who has created a web application that sends emails to users in th
 
 This is where solutions like Emailqueue come in handy: Emailqueue is not an SMTP relay, and not an email sending library like PHPMailer (though it uses PHPMailer for final deliver, actually). Think of it as an intermediate, extremely fast, post office where all the emails your application needs to send are temporarily stored, ordered and organized, this is how it works:
 
-* Your application needs to send an email to a user (or 10 thousand emails to 10 thousand users), so instead of using the PHP mail functions or PHPMailer, it simply adds the email to Emailqueue. You can add emails to Emailqueue by injecting directly into Emailqueue's database or using the provided PHP class.
+* Your application needs to send an email to a user (or 10 thousand emails to 10 thousand users), so instead of using the PHP mail functions or PHPMailer, it simply adds the email to Emailqueue. You can add emails to Emailqueue by calling the Emailqueue API, by injecting directly into Emailqueue's database, by using the provided PHP class.
 
 * The insertion is made as fast as possible, and your application is free to go. Emailqueue will take care of them.
 
-* Every minute, a cronjob calls the Emailqueue's delivery script, completely apart from your running application. Emailqueue checks the queue and sends the queued emails at its own pace. You can configure a delay between each email and the maximum number of emails sent each minute to even tune the delivery speed and be more friendly to external SMTPs.
+* Every minute, emailqueue checks the queue and sends the queued emails at its own pace. You can configure a delay between each email and the maximum number of emails sent each minute to even tune the delivery speed and be more friendly to external SMTPs.
 
 * Emailqueue even does some basic job at retrying emails that cannot be sent for whatever reason, and stores a history of detected incidences.
 
-* Sent emails are stored on emailqueue's database for you to check who received what. A purge script can be regularly called via cronjob to automatically delete old, already sent emails to avoid your emailqueue database grow too big.
+* Sent emails are stored on emailqueue's database for you to check who received what. A purge process is performed automatically to remove sent emails that are too old and to avoid your emailqueue database to grow too big.
 
 
 # Best features #
+* Inject emails via API: super easy, super flexible, inject from anywhere. You can also insert directly into the database or via the provided PHP class.
 * Inject any number of emails super-fast and inmediately free your app to do other things. Let Emailqueue do the job in the background.
 * Prioritize emails: Specify a priority when injecting an email and it will be sent before any other queued emails with lower priorities. E.g: You can inject 100k emails for a newsletter with priority 10 (they will take a while to be sent), and still inject an important email (like a password reminder message) with priority 1 to be sent ASAP even before the huge newsletter has been sent.
 * Schedule emails: Inject now an email and specify a future date/time for a scheduled delivery.
