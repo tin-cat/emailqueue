@@ -1,2 +1,4 @@
 #! /bin/sh
-$(which php) -q $(dirname $0)/flush.php
+PHPBINARY=$(which php)
+BASEDIR=$(dirname $0)
+${PHPBINARY} -q ${BASEDIR}/flush.php
