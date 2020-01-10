@@ -464,4 +464,28 @@
 	    }
 	}
 
+	function getFlagFileName($flagName) {
+		return dirname(__FILE__)."/flags/".$flagName;
+	}
+
+	function isFlag($flagName) {
+		return file_exists(getFlagFileName($flagName));
+	}
+
+	function setFlag($flagName) {
+		if (!file_put_contents(getFlagFileName($flagName), 1)) {
+			echo "Couldn't set flag ".$flagName."\n";
+			return false;
+		}
+		return true;
+	}
+
+	function unsetFlag($flagName) {
+		if (!unlink(getFlagFileName($flagName))) {
+			echo "Couldn't unset flag ".$flagName."\n";
+			return false;
+		}
+		return true;
+	}
+
 ?>

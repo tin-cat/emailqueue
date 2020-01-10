@@ -25,6 +25,12 @@
 	echo "Maximum emails to deliver: ".(MAX_DELIVERS_A_TIME ? MAX_DELIVERS_A_TIME : "no limit")."\n";
 	echo "Process started on: ".date("j/n/Y H:i.s")."\n";
 
+	if (isFlag("paused")) {
+		echo "Emailqueue is paused, not delivering any emails.\n";
+		$db->disconnect();
+		die;
+	}
+
     // Get blacklisted emails
     $db->query("select * from blacklist");
     if ($db->isanyresult()) {
