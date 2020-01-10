@@ -24,6 +24,7 @@
 									document.location = urlifok;
 							}
 						</script>
+						<!-- <script src=\"https://code.jquery.com/jquery-3.4.1.slim.min.js\" integrity=\"sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=\" crossorigin=\"anonymous\"></script> -->
 					</header>
 					<body>
 				";
@@ -34,9 +35,34 @@
 				$this->head_simple().
 				"
 					<div id=\"head\">
-					<img src=\"gfx/img/logo_small.png\" class=\"logo\" title=\"Emailqueue\" />
-					<div class=\"title\">Emailqueue v".VERSION."<br>".date("d.m.Y H'i\"s e", time())."<br><a href=\"".OFFICIAL_PAGE_URL."\" target=\"_newwindow\">official page</a></div>
+						<img src=\"gfx/img/logo_small.png\" class=\"logo\" title=\"Emailqueue\" />
+						<div class=\"title\">
+							<div>Emailqueue v".VERSION." by <a href=\"https://tin.cat\" target=\"_newwindow\">Tin.cat</a> / <a href=\"".OFFICIAL_PAGE_URL."\" target=\"_newwindow\">Github</a></div>
+							<div>Server time <span id=\"serverTime\"></span></div>
+							<div><span id=\"serverRemainingSeconds\"></span> seconds until delivery</div>
+						</div>
 					</div>
+					<script>
+						var serverTimestamp = ".time().";
+						var startTimestamp = Math.round((new Date()).getTime() / 1000);
+						function updateClock() {
+							var nowTimestamp = Math.round((new Date()).getTime() / 1000);
+							var elapsedSeconds = nowTimestamp - startTimestamp;
+							var serverNowTimestamp = serverTimestamp + elapsedSeconds;
+
+							var serverDateNow = new Date(serverNowTimestamp * 1000);
+							var serverSeconds = ('0' + serverDateNow.getSeconds()).substr(-2);
+							var serverRemainingSeconds = 60 - serverSeconds;
+
+							document.getElementById('serverRemainingSeconds').innerHTML = serverRemainingSeconds;
+
+							var formattedTime = serverDateNow.getHours() + ':' + ('0' + serverDateNow.getMinutes()).substr(-2) + ':' + ('0' + serverDateNow.getSeconds()).substr(-2);
+							document.getElementById('serverTime').innerHTML = formattedTime;
+
+							setTimeout(updateClock, 1000);
+						}
+						updateClock();
+					</script>
 				";
 		}
 
