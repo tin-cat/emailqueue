@@ -464,8 +464,12 @@
 	    }
 	}
 
+	function getFlagsDir() {
+		return dirname(__FILE__)."/flags";
+	}
+
 	function getFlagFileName($flagName) {
-		return dirname(__FILE__)."/flags/".$flagName;
+		return getFlagsDir()."/".$flagName;
 	}
 
 	function isFlag($flagName) {
@@ -473,6 +477,9 @@
 	}
 
 	function setFlag($flagName) {
+		if (!file_exists(getFlagsDir())) {
+			mkdir(getFlagsDir(), 0777, true);
+		}
 		if (!file_put_contents(getFlagFileName($flagName), 1)) {
 			echo "Couldn't set flag ".$flagName."\n";
 			return false;
