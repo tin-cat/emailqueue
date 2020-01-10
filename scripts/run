@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ -f "/usr/local/bin/php" ]; then
+	PHPBINARY=/usr/local/bin/php;
+elif [ -f "/usr/bin/php" ]; then
+	PHPBINARY=/usr/bin/php
+fi
+$PHPBINARY -q $(dirname $0)/$1.php

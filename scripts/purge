@@ -1,4 +1,2 @@
 #!/bin/sh
-BASEDIR=$(dirname $0)
-PHPBINARY=$(which php)
-echo `$PHPBINARY -q $BASEDIR/purge.php`
+$(dirname $0)/run purge
