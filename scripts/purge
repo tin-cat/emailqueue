@@ -1,3 +1,2 @@
 #! /bin/sh
-BASEDIR=$(dirname $0)
-/usr/local/bin/php -q ${BASEDIR}/purge.php
+$(which php) -q $(dirname $0)/purge.php
