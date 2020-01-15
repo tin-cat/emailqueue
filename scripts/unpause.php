@@ -22,7 +22,7 @@
 	if (!unsetFlag("paused"))
 		die;
 	
-	echo " [Done]\n";
+	echo " [Unpaused]\n";
 
 	$db->disconnect();
 
