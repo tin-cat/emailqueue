@@ -64,7 +64,7 @@
 			or
 			(date_queued is not null and date_queued <= '".date("Y-n-j H:i:s", $now)."')
 		)
-		".($develEmailsWhere ? $develEmailsWhere : null)."
+		".(isset($develEmailsWhere) ? $develEmailsWhere : null)."
 		order by
 			is_immediate desc,
 			priority asc,
