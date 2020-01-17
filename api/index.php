@@ -10,6 +10,9 @@
     include_once dirname(__FILE__)."/../scripts/emailqueue_inject.class.php"; // Include Emailqueue's emailqueue_inject class.
     
     $emailqueue_inject = new Emailqueue\emailqueue_inject(EMAILQUEUE_DB_HOST, EMAILQUEUE_DB_UID, EMAILQUEUE_DB_PWD, EMAILQUEUE_DB_DATABASE); // Creates an emailqueue_inject object. Needs the database connection information.
+
+	if (!isset($_POST["q"]))
+		apiResult(false, "No query");
 	
 	$q = json_decode($_POST["q"], true);
 	if (is_null($q))

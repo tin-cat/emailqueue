@@ -10,27 +10,27 @@
             
             switch($aa) {
                 case "view":
-                    $retr .= $this->view();
+                    $retr = $this->view();
                     break;
                 
                 case "view_iframe_body":
-                    $retr .= $this->view_iframe_body();
+                    $retr = $this->view_iframe_body();
                     break;
 				
 				case "block":
-					$retr .= $this->block();
+					$retr = $this->block();
 					break;
 				
 				case "unblock":
-					$retr .= $this->unblock();
+					$retr = $this->unblock();
 					break;
 				
 				case "cancel":
-					$retr .= $this->cancel();
+					$retr = $this->cancel();
 					break;
 				
 				case "requeue":
-					$retr .= $this->requeue();
+					$retr = $this->requeue();
 					break;
             }
             
@@ -59,7 +59,7 @@
                     $attachmentsInfo .= $attachment["path"]."<br>";
             }
             
-            $retr .=
+            $retr =
             "
 				<div class=block><a href=\"javascript:history.go(-1);\" class=button>&laquo; back</a></div>
 				<div class=block>
