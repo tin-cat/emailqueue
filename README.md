@@ -98,6 +98,12 @@ There is an official docker compose project for Emailqueue that will get you a r
 
 * Modify the scripts/delivery and scripts/purge files to match the installation directory of your Emailqueue
 
+* Give execution permissions to the scripts
+```
+$ cd scripts
+$ chmod +x delivery flush pause purge run unpause
+```
+
 * Setup two cronjobs in your linux to execute regularly the delivery and purge scripts, e.g:
     
     `$ crontab -e`
