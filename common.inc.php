@@ -172,6 +172,7 @@
 	function deliver_email(&$mail, $email, $isOutputVerbose = false) {
 		global $logger;
 		global $devel_emails;
+		global $db;
 		
 		$mail->clearAllRecipients();
 		$mail->clearAddresses();
@@ -185,8 +186,8 @@
 			flush();
 			echo " [#".$email["id"]." / ".$email["to"];
 		}
-		
-		setsendingnow($email["id"]);
+
+		$isHasToBeSent = true;
 		
 		if ($email["is_sendingnow"]) {
 			if ($isOutputVerbose)
@@ -201,6 +202,7 @@
 					"Try to send an email that is already being sent"
 				)
 			);
+			$isHasToBeSent = false;
 		}
 		
 		if (!checkemail($email["to"])) {
@@ -215,6 +217,7 @@
 					"Incorrect recipient email address"
 				)
 			);
+			$isHasToBeSent = false;
 		}
 		
 		if (!checkemail($email["from"])) {
@@ -232,208 +235,215 @@
 					"Incorrect sender email address"
 				)
 			);
+			$isHasToBeSent = false;
 		}
 		
 		// Check black list
-		if (isset($blacklisted_emails))
-			if (is_array($blacklisted_emails) and in_array(strtolower(trim($email["to"])), $blacklisted_emails)) {
-				if ($isOutputVerbose)
-					echo " / Black listed";
-				add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
-				cancel($email["id"]);
-				$logger->add_log_incidence(
-					array(
-						$email["id"],
-						$email["to"],
-						"Email cancelled",
-						"Recipient is on the black list"
-					)
-				);
-			}
+		$db->query("select id from blacklist where email = '".$db->safestring($email["to"])."'");
+		if ($db->isanyresult()) {
+			if ($isOutputVerbose)
+				echo " / Black listed";
+			add_incidence($email["id"], "Recipient is on the black list: ".$email["to"]);
+			cancel($email["id"]);
+			$logger->add_log_incidence(
+				array(
+					$email["id"],
+					$email["to"],
+					"Email cancelled",
+					"Recipient is on the black list"
+				)
+			);
+			$isHasToBeSent = false;
+		}
 
-		if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && is_array($devel_emails) && in_array($email["to"], $devel_emails))) {
+		if ($isHasToBeSent) {
 
-			$isError = false;
-			try {
+			if (!IS_DEVEL_ENVIRONMENT || (IS_DEVEL_ENVIRONMENT && is_array($devel_emails) && in_array($email["to"], $devel_emails))) {
 
-					if ($email["custom_headers"]) {
-						$custom_headers = unserialize($email["custom_headers"]);
+				setsendingnow($email["id"]);
 
-						if (is_array($custom_headers)) {
+				$isError = false;
+				try {
 
-							if (array_key_exists("Content-Transfer-Encoding", $custom_headers)) {
-								$mail->Encoding = $custom_headers["Content-Transfer-Encoding"];
-								// We don't want to iterate over this header again in the foreach cicle.
-								unset($custom_headers["Content-Transfer-Encoding"]);
-							} else {
-								$mail->Encoding = CONTENT_TRANSFER_ENCODING;
-							}
+						if ($email["custom_headers"]) {
+							$custom_headers = unserialize($email["custom_headers"]);
 
-							foreach ($custom_headers as $header => $value) {
-								$mail->AddCustomHeader($header, $value);
-							}
-						}
-					} else {
-						$mail->Encoding = CONTENT_TRANSFER_ENCODING;
-					}
+							if (is_array($custom_headers)) {
 
-				if ($email["replyto"] != "") {
-					if($email["replyto_name"] != "")
-						$mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
-					else
-						$mail->AddReplyTo($email["replyto"]);
-				}
-				else {
-					$mail->AddReplyTo($email["from"]);
-				}
+								if (array_key_exists("Content-Transfer-Encoding", $custom_headers)) {
+									$mail->Encoding = $custom_headers["Content-Transfer-Encoding"];
+									// We don't want to iterate over this header again in the foreach cicle.
+									unset($custom_headers["Content-Transfer-Encoding"]);
+								} else {
+									$mail->Encoding = CONTENT_TRANSFER_ENCODING;
+								}
 
-				$mail->From = $email["from"];
-				if ($email["from_name"] != "")
-					$mail->FromName = $email["from_name"];
-				
-				if ($email["sender"] != "")
-					$mail->Sender = $email["sender"];
-
-				$to = $email["to"];
-
-				$mail->AddAddress($to);
-
-				$mail->Subject = $email["subject"];
-
-				$mail->WordWrap = 80;
-
-				$body = $email["content"];
-				$body = preg_replace('/\\\\/','', $body);
-
-				if($email["is_html"]) {
-					$mail->IsHTML(true);
-						$mail->AltBody = "Please use an HTML compatible email viewer";
-						$mail->MsgHTML($body);
-					} else {
-						$mail->Body = $body;
-					}
-
-				if($email["is_embed_images"])
-					embed_images($body, $mail);
-
-				if($email["content_nonhtml"] != "")
-					$mail->AltBody = $email["content_nonhtml"];
-
-				if($email["list_unsubscribe_url"] != "")
-					$mail->AddCustomHeader("List-Unsubscribe: <".$email["list_unsubscribe_url"].">");
-
-				// Add attachments
-				if($email["attachments"]) {
-					$attachments = unserialize($email["attachments"]);
-					if (is_array($attachments)) {
-						foreach ($attachments as $attachment) {
-
-							if (!is_array($attachment))
-								continue;
-
-							if (!isset($attachment["fileName"]))
-								$attachment["fileName"] = basename($attachment["path"]);
-
-							if (!isset($attachment["encoding"]))
-								$attachment["encoding"] = "base64";
-
-							if (!isset($attachment["type"])) {
-								if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
-									if (!$mimeType = finfo_file($finfo, $attachment["path"]))
-										throw new Exception("Can't guess mimetype for ".$attachment["path"]);
-									finfo_close($finfo);
-									$attachment["type"] = $mimeType;
+								foreach ($custom_headers as $header => $value) {
+									$mail->AddCustomHeader($header, $value);
 								}
 							}
+						} else {
+							$mail->Encoding = CONTENT_TRANSFER_ENCODING;
+						}
 
-							$mail->AddAttachment(
-								$attachment["path"],
-								$attachment["fileName"],
-								$attachment["encoding"],
-								$attachment["type"]
-							);
+					if ($email["replyto"] != "") {
+						if($email["replyto_name"] != "")
+							$mail->AddReplyTo($email["replyto"], $email["replyto_name"]);
+						else
+							$mail->AddReplyTo($email["replyto"]);
+					}
+					else {
+						$mail->AddReplyTo($email["from"]);
+					}
+
+					$mail->From = $email["from"];
+					if ($email["from_name"] != "")
+						$mail->FromName = $email["from_name"];
+					
+					if ($email["sender"] != "")
+						$mail->Sender = $email["sender"];
+
+					$to = $email["to"];
+
+					$mail->AddAddress($to);
+
+					$mail->Subject = $email["subject"];
+
+					$mail->WordWrap = 80;
+
+					$body = $email["content"];
+					$body = preg_replace('/\\\\/','', $body);
+
+					if($email["is_html"]) {
+						$mail->IsHTML(true);
+							$mail->AltBody = "Please use an HTML compatible email viewer";
+							$mail->MsgHTML($body);
+						} else {
+							$mail->Body = $body;
+						}
+
+					if($email["is_embed_images"])
+						embed_images($body, $mail);
+
+					if($email["content_nonhtml"] != "")
+						$mail->AltBody = $email["content_nonhtml"];
+
+					if($email["list_unsubscribe_url"] != "")
+						$mail->AddCustomHeader("List-Unsubscribe: <".$email["list_unsubscribe_url"].">");
+
+					// Add attachments
+					if($email["attachments"]) {
+						$attachments = unserialize($email["attachments"]);
+						if (is_array($attachments)) {
+							foreach ($attachments as $attachment) {
+
+								if (!is_array($attachment))
+									continue;
+
+								if (!isset($attachment["fileName"]))
+									$attachment["fileName"] = basename($attachment["path"]);
+
+								if (!isset($attachment["encoding"]))
+									$attachment["encoding"] = "base64";
+
+								if (!isset($attachment["type"])) {
+									if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
+										if (!$mimeType = finfo_file($finfo, $attachment["path"]))
+											throw new Exception("Can't guess mimetype for ".$attachment["path"]);
+										finfo_close($finfo);
+										$attachment["type"] = $mimeType;
+									}
+								}
+
+								$mail->AddAttachment(
+									$attachment["path"],
+									$attachment["fileName"],
+									$attachment["encoding"],
+									$attachment["type"]
+								);
+							}
 						}
 					}
-				}
-			
-				$mail->Send();
-
-			} catch (\PHPMailer\PHPMailer\Exception $e) {
-
-				$isError = true;
-				$errorText = $e->getMessage();
-
-			} catch (Exception $e) {
-
-				$isError = true;
-				$errorText = $e->getMessage();
-
-			}
-
-			if ($isError) {
-
-				if ($isOutputVerbose)
-					echo " / Error ".$errorText;
 				
-				if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
-					update_error_count($email["id"], $email["error_count"]+1);
-					$incidence_text = "Error while sending email: [".$errorText."] Cancelled: No more sending attempts allowed";
-					add_incidence($email["id"], $incidence_text);
-					cancel($email["id"]);
-					$logger->add_log_incidence(
-						array(
+					$mail->Send();
+
+				} catch (\PHPMailer\PHPMailer\Exception $e) {
+
+					$isError = true;
+					$errorText = $e->getMessage();
+
+				} catch (Exception $e) {
+
+					$isError = true;
+					$errorText = $e->getMessage();
+
+				}
+
+				if ($isError) {
+
+					if ($isOutputVerbose)
+						echo " / Error ".$errorText;
+					
+					if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$errorText."] Cancelled: No more sending attempts allowed";
+						add_incidence($email["id"], $incidence_text);
+						cancel($email["id"]);
+						$logger->add_log_incidence(
+							array(
+								$email["id"],
+								$email["to"],
+								"Email cancelled",
+								"No more sending attempts allowed"
+							)
+						);
+						if ($isOutputVerbose)
+							echo " / No more attempts";
+					}
+					else {
+						update_error_count($email["id"], $email["error_count"]+1);
+						$incidence_text = "Error while sending email: [".$errorText."] Scheduled for one more try";
+						add_incidence($email["id"], $incidence_text);
+						$logger->add_log_incidence(array(
 							$email["id"],
 							$email["to"],
-							"Email cancelled",
-							"No more sending attempts allowed"
-						)
-					);
-					if ($isOutputVerbose)
-						echo " / No more attempts";
-				}
-				else {
-					update_error_count($email["id"], $email["error_count"]+1);
-					$incidence_text = "Error while sending email: [".$errorText."] Scheduled for one more try";
-					add_incidence($email["id"], $incidence_text);
-					$logger->add_log_incidence(array(
+							"Email rescheduled",
+							$incidence_text
+						));
+						if ($isOutputVerbose)
+							echo " / Scheduled for one more try";
+					}
+
+				} else {
+					
+					mark_as_sent($email["id"]);
+					update_send_count($email["id"], $email["send_count"]+1);
+					update_sentdate($email["id"], time());
+					$logger->add_log_delivery(array(
 						$email["id"],
+						"Email delivered",
+						$email["from"],
 						$email["to"],
-						"Email rescheduled",
-						$incidence_text
+						$email["subject"]
 					));
 					if ($isOutputVerbose)
-						echo " / Scheduled for one more try";
+						echo " / Processed";
+					
+					// Sleeping
+					usleep((DELIVERY_INTERVAL/100));
+
 				}
 
-			} else {
-				
-				mark_as_sent($email["id"]);
-				update_send_count($email["id"], $email["send_count"]+1);
-				update_sentdate($email["id"], time());
-				$logger->add_log_delivery(array(
-					$email["id"],
-					"Email delivered",
-					$email["from"],
-					$email["to"],
-					$email["subject"]
-				));
+				unsetsendingnow($email["id"]);
+
+			} else
 				if ($isOutputVerbose)
-					echo " / Processed";
-				
-				// Sleeping
-				usleep((DELIVERY_INTERVAL/100));
-
-			}
-
-		} else
-			if ($isOutputVerbose)
-				echo " / Not devel allowed recipient";
-				
+					echo " / Not devel allowed recipient";
 		
+		}
+				
 		if ($isOutputVerbose)
 			echo "]";
-		
-		unsetsendingnow($email["id"]);
 	}
 
 	// Function embed_images below by Emmanuel Alves http://stackoverflow.com/users/3821744/emmanuel-alves

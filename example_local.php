@@ -25,11 +25,12 @@
 			"is_send_now" => false, // Set it to true to make this email be sent right now, without waiting for the next delivery call. This effectively gets rid of the queueing capabilities of emailqueue and can delay the execution of your script a little while the SMTP connection is done. Use it in those cases where you don't want your users to wait not even a minute to receive your message. Defaults to false.
 			"date_queued" => false, // If specified, this message will be sent only when the given timestamp has been reached. Leave it to false to send the message as soon as possible. (doesn't overrides priority setting)
 			"is_html" => true, // Whether the given "content" parameter contains HTML or not. Defaults to true.	
-			"from" => "from@email.com", // The sender email address
+			"from" => "info@litmind.com", // The sender email address
 			"from_name" => "From name", // The sender name
-			"to" => "lorenzo@tin.cat", // The addressee email address
-			"replyto" => "replyto@email.com", // The email address where replies to this message will be sent by default
+			"to" => "loren@tin.cat", // The addressee email address
+			"replyto" => "lorenzo@litmind.com", // The email address where replies to this message will be sent by default
 			"replyto_name" => "Replyto email", // The name where replies to this message will be sent by default
+			"sender" => "lorenzo@litmind.com",
 			"subject" => "Test email from emailqueue", // The email subject
 			"content" => "<html><body>Test <b><i>HTML</i></b> message with some emoji 🚀", // The email content. Can contain HTML (set is_html parameter to true if so).
 			"content_nonhtml" => false, // The plain text-only content for clients not supporting HTML emails (quite rare nowadays). If set to false, a text-only version of the given content will be automatically generated.

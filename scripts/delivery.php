@@ -27,14 +27,6 @@
 		die;
 	}
 
-    // Get blacklisted emails
-    $db->query("select * from blacklist");
-    if ($db->isanyresult()) {
-        while($row = $db->fetchrow())
-            $blacklisted_emails[] = $row["email"];
-        $db->free();
-    }
-
 	$now = time();
 
 	// If we're in the devel environment, get only emails addressed to the recipients listed on $devel_emails

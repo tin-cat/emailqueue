@@ -11,8 +11,9 @@
 		"asfKkj3=m2345k",
 		[
 			[
-				"from" => "me@domain.com",
-				"to" => "him@domain.com",
+				"from" => "info@litmind.com",
+				"to" => "lorenzo@tin.cat",
+				"sender" => "lorenzo@litmind.com",
 				"subject" => "Just testing",
 				"content" => "This is just an email to test Emailqueue"
 			]
