@@ -93,6 +93,10 @@ There is an official docker compose project for Emailqueue that will get you a r
 
 * Modify the scripts/delivery and scripts/purge files to match the installation directory of your Emailqueue
 
+* Give permissions for the scripts to run correctly
+    
+    `$ chmod +x PATH_APPLICATION/scripts/*`
+
 * Setup two cronjobs in your linux to execute regularly the delivery and purge scripts, e.g:
     
     `$ crontab -e`
@@ -104,7 +108,6 @@ There is an official docker compose project for Emailqueue that will get you a r
     * The delivery script delivers pending emails in the queue. Running it every minute is recommended.
 
     * The purge script removes old & already sent emails from the queue to avoid the queue from growing too big. Running it every day is more than enough.
-
 
 * You should be ready to go, now you can:
 
