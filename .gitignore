@@ -2,7 +2,7 @@ config/db.config.inc.php
 config/application.config.inc.php
 logs/
 vendor/
-!README
+composer.lock
 
 # Annoying files
 .DS_Store
