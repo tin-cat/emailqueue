@@ -5,7 +5,7 @@
 
 	namespace Emailqueue;
 
-	define("VERSION", "3.4");
+	define("VERSION", "3.41");
 	define("OFFICIAL_PAGE_URL", "https://github.com/tin-cat/emailqueue");
 
 	require_once(dirname(__FILE__)."/config/db.config.inc.php");
