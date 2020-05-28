@@ -288,8 +288,11 @@
 				}
 
 				$mail->From = $email["from"];
-				if($email["from_name"] != "")
+				if ($email["from_name"] != "")
 					$mail->FromName = $email["from_name"];
+				
+				if ($email["sender"] != "")
+					$mail->Sender = $email["sender"];
 
 				$to = $email["to"];
 

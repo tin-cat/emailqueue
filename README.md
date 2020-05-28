@@ -31,6 +31,9 @@ There is an official docker compose project for Emailqueue that will get you a r
 
 
 # Changelog #
+* **Version 3.41**
+  * Added the option to specify a Sender email address via the "sender" array key in emailqueue_inject and the API for emails to allow specific Return-path values, so bounces and SMTP delivery notification messages are sent to the Sender instead of the From. This might not work in all SMTP servers, since they might set the Return-path according to their own policies. Thanks to [@Andrewsuares](https://github.com/Andrewsuares) for suggesting this improvement. This requires an update of the database you can execute by running the provided `install/migrate_from_v3.3_or_v3.4_to_v3.41.sql`
+
 * **Version 3.4**
   * Created the official docker compose project for Emailqueue (https://github.com/tin-cat/emailqueue-docker) that allows you to deploy a working emailqueue setup very easily.
   * Added a simple HTTP API to queue emails, useful when running Emailqueue in an isolated server, or as a docker service.
@@ -112,18 +115,22 @@ There is an official docker compose project for Emailqueue that will get you a r
     * Send emails using the provided emailqueue_inject PHP class found in scripts/emailqueue_inject.class.php. See an example on how to use this class in example_local.php
     * You can also inject messages to the queue by manually inserting them on the database via SQL (Insert in the "emails" table, read the field comments for detailed explanations)
 
+# Migrate from Version 3.3 or 3.4 to Version 3.41 #
+* Run `$ git pull` in your emailqueue directory to get the latest version.
+* Using your database manager, select your emailqueue database and run the `install/migrate_from_v3.3_or_v3.4_to_v3.41.sql` SQL file.
+
 # Migrate from Version 3.2 to Version 3.3 #
 * Run `$ git pull` in your emailqueue directory to get the latest version.
-* Using your database manager, select your emailqueue database and run the install/migrate_from_v3.2_to_v3.2.sql SQL file.
+* Using your database manager, select your emailqueue database and run the `install/migrate_from_v3.2_to_v3.2.sql` SQL file.
 
 # Migrate from Version 3.1 to Version 3.2 #
 * Install this new 3.2 version following the regular Install process.
 * Set up the same database connection parameters as your existing Emailqueue database. Note that some minor things have changed in db.config.inc.php and application.config.inc.php, so you cannot use the old ones.
-* Using your database manager, select your emailqueue database and run the install/migrate_from_v3.1_to_v3.2.sql SQL file.
+* Using your database manager, select your emailqueue database and run the `install/migrate_from_v3.1_to_v3.2.sql` SQL file.
 * Run `$ composer update` on the installation dir to get the latest phpmailer libraries.
 
 # Migrating from versions older than v3.1 #
-If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, using your database manager, select your emailqueue database and run the install/migrate_from_versions_older_than_v3.1.sql SQL file.
+If you have a version of emailqueue older than v3.1 (released on december 26th, 2015), and want to upgrade to v.3.1 or above, using your database manager, select your emailqueue database and run the `install/migrate_from_versions_older_than_v3.1.sql` SQL file.
 
 # How to use if Emailqueue is on the same server as your code #
 The file example_local.php is a thoroughly documented example on how to send an email using emailqueue using the provided emailqueue_inject PHP class. Use this method of injecting emails when Emailqueue is installed in the same server as your code, and Emailqueue configuration files and the emailqueue_inject.class.php class file is accessible by your code.
