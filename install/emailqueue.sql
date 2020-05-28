@@ -19,6 +19,7 @@ CREATE TABLE `emails` (
   `to` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The email address of the recipient.',
   `replyto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The email addess where replies to this message will be sent by default.',
   `replyto_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The name where this email will be replied by default.',
+  `sender` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'The Sender email address for bounces and SMTP delivery emails.',
   `subject` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'The email''s subject',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'The content of the email. If HTML, be sure to set the is_html field to 1',
   `content_nonhtml` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Optional. A plain-text version of the email for old clients.',
@@ -44,7 +45,8 @@ CREATE TABLE `blacklist` (
 
 ALTER TABLE `blacklist`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `email` (`email`(5));
 
 ALTER TABLE `emails`
   ADD PRIMARY KEY (`id`),
