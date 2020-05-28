@@ -33,6 +33,8 @@ There is an official docker compose project for Emailqueue that will get you a r
 # Changelog #
 * **Version 3.41**
   * Added the option to specify a Sender email address via the "sender" array key in emailqueue_inject and the API for emails to allow specific Return-path values, so bounces and SMTP delivery notification messages are sent to the Sender instead of the From. This might not work in all SMTP servers, since they might set the Return-path according to their own policies. Thanks to [@Andrewsuares](https://github.com/Andrewsuares) for suggesting this improvement. This requires an update of the database you can execute by running the provided `install/migrate_from_v3.3_or_v3.4_to_v3.41.sql`
+  * Solved bug that caused emails to be sent to blacklisted addresses. Thanks to [@Andrewsuares](https://github.com/Andrewsuares) for noting that!
+  * Solved bug that caused emails to be sent even after checking that the address was incorrect.
 
 * **Version 3.4**
   * Created the official docker compose project for Emailqueue (https://github.com/tin-cat/emailqueue-docker) that allows you to deploy a working emailqueue setup very easily.
