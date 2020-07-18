@@ -78,6 +78,10 @@
                     $p[$key] = $parameter["default"];
             }
 
+			// Cleaning
+			foreach (["from", "to", "replyto", "sender"] as $key)
+				$p[$key] = trim($p[$key]);
+
             $this->db_connect();
 
             if ($p["is_send_now"])
