@@ -24,7 +24,7 @@
 		EMAILQUEUE_DB_DATABASE
 	);
 	if (!$db->connect()) {
-		throw new EmailqueueException("Cannot connect to database");
+		throw new \Exception("Cannot connect to database");
 		die;
 	}
 	
@@ -349,7 +349,7 @@
 								if (!isset($attachment["type"])) {
 									if ($finfo = finfo_open(FILEINFO_MIME_TYPE)) {
 										if (!$mimeType = finfo_file($finfo, $attachment["path"]))
-											throw new Exception("Can't guess mimetype for ".$attachment["path"]);
+											throw new \Exception("Can't guess mimetype for ".$attachment["path"]);
 										finfo_close($finfo);
 										$attachment["type"] = $mimeType;
 									}
@@ -372,7 +372,7 @@
 					$isError = true;
 					$errorText = $e->getMessage();
 
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 
 					$isError = true;
 					$errorText = $e->getMessage();
