@@ -1,9 +1,9 @@
 <?php
+	namespace Emailqueue;
 
 	use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
 
-	namespace Emailqueue;
 
 	define("VERSION", "3.411");
 	define("OFFICIAL_PAGE_URL", "https://github.com/tin-cat/emailqueue");
