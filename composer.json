@@ -1,5 +1,5 @@
 {
-	"name": "tin-cat/emailqueue",
+    "name": "tin-cat/emailqueue",
     "type": "library",
     "description": "A fast, simple yet very efficient email queuing system for PHP/MySQL.",
     "keywords": ["email"],
@@ -14,6 +14,6 @@
         }
     ],
     "require": {
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.5.0"
     }
 }
