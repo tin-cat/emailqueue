@@ -16,7 +16,7 @@
 
 	$q = json_decode($_POST["q"], true);
 	if (is_null($q))
-		apiResult(false, "Can't decode query (".json_last_error_msg().")");
+		apiResult(false, "Can't decode query (".json_last_error_msg().": ".print_r($_POST["q"], true).")");
 
 	if (!$q["key"] || $q["key"] == "")
 		apiResult(false, "No API key passed");
