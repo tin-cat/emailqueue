@@ -1,8 +1,9 @@
 {
 	"name": "tin-cat/emailqueue",
+	"version": "3.4.12",
     "type": "library",
     "description": "A fast, simple yet very efficient email queuing system for PHP/MySQL.",
-    "keywords": ["email"],
+    "keywords": ["email","queue","queueing","php"],
     "homepage": "https://github.com/tin-cat/emailqueue",
     "license": "MIT",
     "authors": [
@@ -14,6 +15,8 @@
         }
     ],
     "require": {
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+		"php": ">=5.4",
+		"ext-mysqli": "*"
     }
 }
