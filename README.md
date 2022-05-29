@@ -31,6 +31,11 @@ There is an official docker compose project for Emailqueue that will get you a r
 
 
 # Changelog #
+* **Version 3.4.12**
+  * Upgraded PHPMailer version dependency to avoid vulnerabilities.
+  * `is_sent`, `is_cancelled` and `is_blocked` database fields are not set to 0 by default. Thanks to @marco-pm for noting this problem. Issue #29
+  * Added php and mysqli to composer dependencies. Thanks to @marco-pm for suggesting this improvement. Issue #28
+  * Switched to semantic versioning. (From v3.412 to v3.4.12).
 * **Version 3.411**
   * When injecting using emailqueue_inject, email addresses are trimmed to remove leading and trailing spaces and other unwanted characters like NUL, tab and carriage returns. Other minor bugs solved.
 * **Version 3.41**
@@ -48,7 +53,7 @@ There is an official docker compose project for Emailqueue that will get you a r
 * **Version 3.3**
   * Support for Emoji.
   * Errors are now thrown using standard PHP Exceptions and are easily catchable.
-  
+
 * **Version 3.2**
   * Switched to MIT license, now Emailqueue can be used in commercial, non GNU-GPL projects.
   * emailqueue_inject::inject method is now called differently, see the "How to use" section or example_local.php for for info.
@@ -57,7 +62,7 @@ There is an official docker compose project for Emailqueue that will get you a r
   * Using standard <?php instead of the shorthand <? version for improved compatibility.
   * No need to configure LIB_DIR or APP_DIR anymore.
   * "is_inmediate" parameter typo solve876543	, now it's called "is_immediate"
-  
+
 * **Version 3.1**
   * Finally Emailqueue supports attachments! See the "Hints" section for an interesting idea with this.
   * Super-powerful functionality to auto-embed all images in your messages as attachments, so they should appear really fast on the user's screen once received (no additional images to download by the client). Also, some email clients might show the images straightaway without asking the user to download them.
@@ -107,7 +112,7 @@ $ chmod +x delivery flush pause purge run unpause
 ```
 
 * Setup two cronjobs in your linux to execute regularly the delivery and purge scripts, e.g:
-    
+
     `$ crontab -e`
 
     Add the following lines:
@@ -152,7 +157,7 @@ Here's what to do:
     * config/db.config.inc.php
     * scripts/emailqueue_inject.class.php
 * Instantiate an emailqueue_inject object passing the database connection configuration, which can be taken from the very same configuration stored in db.config.inc.php by just specifying the defines as follows:
-  
+
   `$emailqueue_inject = new emailqueue_inject(DB_HOST, DB_UID, DB_PWD, DB_DATABASE);`
 
 * Send an email by calling the inject method of the emailqueue_inject object, passing a hash array with the keys as defined in the "Emailqueue injection keys" section of this document.
