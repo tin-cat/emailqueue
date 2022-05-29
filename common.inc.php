@@ -5,12 +5,12 @@
     use PHPMailer\PHPMailer\Exception;
 
 
-	define("VERSION", "3.411");
+	define("VERSION", "3.4.12");
 	define("OFFICIAL_PAGE_URL", "https://github.com/tin-cat/emailqueue");
 
 	require_once(dirname(__FILE__)."/config/db.config.inc.php");
 	require_once(dirname(__FILE__)."/config/application.config.inc.php");
-	
+
 	date_default_timezone_set(DEFAULT_TIMEZONE);
 
 	require_once(dirname(__FILE__)."/classes/database/dbsource.inc.php");
@@ -27,21 +27,21 @@
 		throw new \Exception("Cannot connect to database");
 		die;
 	}
-	
+
 	$db->query("set names UTF8");
-	
+
 	require("classes/out.class.php");
 	global $output;
 	$output = new \Emailqueue\output;
-	
+
 	require("classes/html.class.php");
 	global $html;
 	$html = new \Emailqueue\html;
-	
+
 	require("classes/utils.class.php");
 	global $utils;
 	$utils = new \Emailqueue\utils;
-	
+
 	require("classes/messages.class.php");
 	global $messages;
 	$messages = new \Emailqueue\messages;
@@ -49,14 +49,14 @@
 	require("classes/logger.class.php");
 	global $logger;
 	$logger = new \Emailqueue\logger;
-	
+
 	function checkemail($email) {
         return preg_match("/^[.\w-]+@([\w-]+\.)+[a-zA-Z]{2,15}$/", $email);
 	}
-	
+
 	function add_incidence($email_id, $description) {
 		global $db;
-		
+
 		$db->query
 		("
 			insert into
@@ -72,54 +72,54 @@
 			)
 		");
 	}
-	
+
 	function mark_as_sent($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_sent = 1 where id = ".$email_id);
 	}
-	
+
 	function cancel($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_cancelled = 1 where id = ".$email_id);
 	}
-	
+
 	function uncancel($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_cancelled = 0 where id = ".$email_id);
 	}
-	
+
 	function block($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_blocked = 1 where id = ".$email_id);
 	}
-	
+
 	function unblock($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_blocked = 0 where id = ".$email_id);
 	}
-	
+
 	function setsendingnow($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_sendingnow = 1 where id = ".$email_id);
 	}
-	
+
 	function unsetsendingnow($email_id) {
-		global $db;		
+		global $db;
 		$db->query("update emails set is_sendingnow = 0 where id = ".$email_id);
 	}
 
 	function update_send_count($email_id, $count) {
-		global $db;		
+		global $db;
 		$db->query("update emails set send_count = ".$count." where id = ".$email_id);
 	}
-	
+
 	function update_error_count($email_id, $count) {
-		global $db;		
+		global $db;
 		$db->query("update emails set error_count = ".$count." where id = ".$email_id);
 	}
-	
+
 	function update_sentdate($email_id, $timestamp) {
-		global $db;		
+		global $db;
 		$db->query("update emails set date_sent = '".date("Y-n-j H:i:s", $timestamp)."' where id = ".$email_id);
 	}
 
@@ -147,21 +147,21 @@
 	function deliver_emails(&$mail, $emails, $isOutputVerbose = false) {
 		global $logger;
 		$timecontrol_start = time();
-		
+
 		foreach ($emails as $email) {
 			deliver_email($mail, $email, $isOutputVerbose);
-			
+
 			// Check if maximum delivery timeout have been reached
 			if ((time() - $timecontrol_start) > MAXIMUM_DELIVERY_TIMEOUT) {
 				if ($isOutputVerbose) {
-                	echo " [Reached maximum delivery timeout]"; 
+                	echo " [Reached maximum delivery timeout]";
 				}
                 $logger->add_log_incidence(
                     array(
                         0,
                         "",
                         "Maximum delivery timeout reached",
-                        "The delivery proccess have been automatically stopped before it finishes because of too many time spent on delivering. Time spent: ".(time() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds" 
+                        "The delivery proccess have been automatically stopped before it finishes because of too many time spent on delivering. Time spent: ".(time() - $timecontrol_start)." seconds. Maximum time allowed: ".MAXIMUM_DELIVERY_TIMEOUT." seconds"
                     )
                 );
                 break;
@@ -173,7 +173,7 @@
 		global $logger;
 		global $devel_emails;
 		global $db;
-		
+
 		$mail->clearAllRecipients();
 		$mail->clearAddresses();
 		$mail->clearCCs();
@@ -188,7 +188,7 @@
 		}
 
 		$isHasToBeSent = true;
-		
+
 		if ($email["is_sendingnow"]) {
 			if ($isOutputVerbose)
 				echo " / Already being sent";
@@ -204,7 +204,7 @@
 			);
 			$isHasToBeSent = false;
 		}
-		
+
 		if (!checkemail($email["to"])) {
 			echo " / Bad recipient";
 			add_incidence($email["id"], "Incorrect recipient email address: ".$email["to"]);
@@ -219,7 +219,7 @@
 			);
 			$isHasToBeSent = false;
 		}
-		
+
 		if (!checkemail($email["from"])) {
 			if ($isOutputVerbose)
 				echo " / Bad sender";
@@ -237,7 +237,7 @@
 			);
 			$isHasToBeSent = false;
 		}
-		
+
 		// Check black list
 		$db->query("select id from blacklist where email = '".$db->safestring($email["to"])."'");
 		if ($db->isanyresult()) {
@@ -299,7 +299,7 @@
 					$mail->From = $email["from"];
 					if ($email["from_name"] != "")
 						$mail->FromName = $email["from_name"];
-					
+
 					if ($email["sender"] != "")
 						$mail->Sender = $email["sender"];
 
@@ -364,7 +364,7 @@
 							}
 						}
 					}
-				
+
 					$mail->Send();
 
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
@@ -383,7 +383,7 @@
 
 					if ($isOutputVerbose)
 						echo " / Error ".$errorText;
-					
+
 					if ($email["error_count"] == SENDING_RETRY_MAX_ATTEMPTS-1) {
 						update_error_count($email["id"], $email["error_count"]+1);
 						$incidence_text = "Error while sending email: [".$errorText."] Cancelled: No more sending attempts allowed";
@@ -415,7 +415,7 @@
 					}
 
 				} else {
-					
+
 					mark_as_sent($email["id"]);
 					update_send_count($email["id"], $email["send_count"]+1);
 					update_sentdate($email["id"], time());
@@ -428,7 +428,7 @@
 					));
 					if ($isOutputVerbose)
 						echo " / Processed";
-					
+
 					// Sleeping
 					usleep((DELIVERY_INTERVAL/100));
 
@@ -439,9 +439,9 @@
 			} else
 				if ($isOutputVerbose)
 					echo " / Not devel allowed recipient";
-		
+
 		}
-				
+
 		if ($isOutputVerbose)
 			echo "]";
 	}
@@ -465,13 +465,13 @@
 	            $dataType = "image/gif";
 	        } else {
 	            // use the oldfashion way
-	            $id = 'img' . $index;            
+	            $id = 'img' . $index;
 	            $mailer->AddEmbeddedImage($src, $id);
 	            $body = str_replace($src, 'cid:' . $id, $body);
 	        }
 
-	        if($dataType) { 
-	            $urlContent = file_get_contents($src);            
+	        if($dataType) {
+	            $urlContent = file_get_contents($src);
 	            $body = str_replace($src, 'data:'. $dataType .';base64,' . base64_encode($urlContent), $body);
 	        }
 	    }
