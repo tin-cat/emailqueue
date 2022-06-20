@@ -18,6 +18,7 @@
 	
 	define("SEND_METHOD", "smtp"); // Set it to either "smtp" or "sendmail" to choose the method for delivering emails. If "smtp" is choosen, at least the SMTP_SERVER below must be set.
 	define("SMTP_SERVER", "127.0.0.1"); // The IP of the SMTP server
+	define("SMTP_Secure", ""); // Set "ssl" or "tls" to encrypt your communication
 	define("SMTP_PORT", 25); // The port of the SMTP server
 	define("SMTP_IS_AUTHENTICATION", false); // True to use SMTP server Authentication
 	define("SMTP_AUTHENTICATION_USERNAME", "");

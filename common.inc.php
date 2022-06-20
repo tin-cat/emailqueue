@@ -2,7 +2,7 @@
 	namespace Emailqueue;
 
 	use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
+        use PHPMailer\PHPMailer\Exception;
 
 
 	define("VERSION", "3.4.12");
@@ -130,7 +130,8 @@
         if (SEND_METHOD == "smtp") {
             $mail->IsSMTP();
             $mail->Host = SMTP_SERVER;
-			$mail->Port = SMTP_PORT;
+	    $mail->SMTPSecure = SMTP_Secure; // Fill 'ssl' or 'tls' to encrypt your communication.
+	    $mail->Port = SMTP_PORT;
             $mail->SMTPKeepAlive = true;
 
             if (SMTP_IS_AUTHENTICATION) {

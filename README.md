@@ -116,8 +116,10 @@ $ chmod +x delivery flush pause purge run unpause
     `$ crontab -e`
 
     Add the following lines:
-    `* * * * * /var/www/htdocs/emailqueue/scripts/delivery`
-    `0 6 * * * /var/www/htdocs/emailqueue/scripts/purge`
+```
+* * * * * /var/www/htdocs/emailqueue/scripts/delivery
+0 6 * * * /var/www/htdocs/emailqueue/scripts/purge
+```
 
     * The delivery script delivers pending emails in the queue. Running it every minute is recommended.
 
