@@ -204,22 +204,48 @@
 			);
 			$isHasToBeSent = false;
 		}
+		
+		if (strpos($email["to"],",") !== false) {
+			// multiple email addresses
+			$toArray = explode(",",$email["to"]);
+			foreach ($toArray as $toAddress) {
+				if (!checkemail($toAddress)) {
+					echo " / Bad recipient";
+					add_incidence($email["id"], "Incorrect recipient email address: ".$toAddress);
+					cancel($email["id"]);
+					$logger->add_log_incidence(
+						array(
+							$email["id"],
+							$toAddress,
+							"Email cancelled",
+							"Incorrect recipient email address"
+						)
+					);
+					$isHasToBeSent = false;
+				}
+				$mail->AddAddress($toAddress);
+			}
 
-		if (!checkemail($email["to"])) {
-			echo " / Bad recipient";
-			add_incidence($email["id"], "Incorrect recipient email address: ".$email["to"]);
-			cancel($email["id"]);
-			$logger->add_log_incidence(
-				array(
-					$email["id"],
-					$email["to"],
-					"Email cancelled",
-					"Incorrect recipient email address"
-				)
-			);
-			$isHasToBeSent = false;
+		} else {
+			if (!checkemail($email["to"])) {
+				echo " / Bad recipient";
+				add_incidence($email["id"], "Incorrect recipient email address: ".$email["to"]);
+				cancel($email["id"]);
+				$logger->add_log_incidence(
+					array(
+						$email["id"],
+						$email["to"],
+						"Email cancelled",
+						"Incorrect recipient email address"
+					)
+				);
+				$isHasToBeSent = false;
+			}
+			$to = $email["to"];
+
+			$mail->AddAddress($to);
 		}
-
+		
 		if (!checkemail($email["from"])) {
 			if ($isOutputVerbose)
 				echo " / Bad sender";
@@ -302,10 +328,6 @@
 
 					if ($email["sender"] != "")
 						$mail->Sender = $email["sender"];
-
-					$to = $email["to"];
-
-					$mail->AddAddress($to);
 
 					$mail->Subject = $email["subject"];
 
