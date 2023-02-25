@@ -51,7 +51,7 @@
 	$logger = new \Emailqueue\logger;
 
 	function checkemail($email) {
-        return preg_match("/^[.\w-]+@([\w-]+\.)+[a-zA-Z]{2,15}$/", $email);
+	return preg_match("/^[.\+\w-]+@([\w-]+\.)+[\w-]{2,15}$/", $email);
 	}
 
 	function add_incidence($email_id, $description) {
